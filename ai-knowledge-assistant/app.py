@@ -1,5 +1,5 @@
 """Chat UI on answer_engine.pipeline, plus a Documents tab to upload, list and delete files.
-Run from "AI knowledge Assisstant/": python app_engine.py"""
+Run from "ai-knowledge-assistant/": python app.py"""
 import re
 from pathlib import Path
 
@@ -17,7 +17,7 @@ MAX_FILE_SIZE = "50mb"
 DOCUMENT_COLUMNS = ["Document", "Title", "Type", "Chunks"]
 EMPTY_INDEX_HINT = (
     "*No documents indexed yet.* Upload files on the **Documents** tab, or index a whole folder with "
-    "`python -m answer_engine.pipeline ingest knowledge-base`."
+    "`python -m answer_engine.pipeline ingest data/insurellm`."
 )
 # The answer prompt says "you don't have that information in the available documents" when nothing answers
 # the question. Partial answers start with facts, so only the first sentence is checked, and it must also talk

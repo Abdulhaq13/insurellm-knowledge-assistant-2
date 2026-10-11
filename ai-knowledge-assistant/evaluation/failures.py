@@ -12,7 +12,7 @@ import textwrap
 from collections import Counter
 from pathlib import Path
 
-from evaluation.test import load_tests
+from evaluation.question_set import load_tests
 
 RESULTS_DIR = Path(__file__).parent / "results"
 FAIL_ACCURACY = 3  # matches eval.py: an answer passes with accuracy >= 4

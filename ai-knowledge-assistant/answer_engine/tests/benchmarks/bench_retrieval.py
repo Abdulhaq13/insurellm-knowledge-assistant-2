@@ -1,7 +1,7 @@
-"""Retrieval benchmark: ingest knowledge-base/ into a throwaway client and score all 150 tests. Local and free
-(no API calls unless --decompose). Run from "AI knowledge Assisstant/":
+"""Retrieval benchmark: ingest data/insurellm/ into a throwaway client and score all 150 tests. Local and free
+(no API calls unless --decompose). Run from "ai-knowledge-assistant/":
 
-    python -m answer_engine.tests.bench_retrieval --label X [--no-list-extra] [--decompose]
+    python -m answer_engine.tests.benchmarks.bench_retrieval --label X [--no-list-extra] [--decompose]
 """
 import argparse
 import hashlib
@@ -18,11 +18,11 @@ from answer_engine.config import FINAL_K, ROOT
 from answer_engine.index import ClientIndex
 from answer_engine.schema import LoadedDocument, Section
 from evaluation.eval import score_retrieval
-from evaluation.test import load_tests
+from evaluation.question_set import load_tests
 
 
-KNOWLEDGE_BASE = ROOT / "knowledge-base"
-BASELINE = ROOT / "evaluation" / "results" / "after_bge_1200_k6_retrieval.json"
+KNOWLEDGE_BASE = ROOT / "data" / "insurellm"
+BASELINE = ROOT / "evaluation" / "results" / "archive" / "after_bge_1200_k6_retrieval.json"
 RESULTS_DIR = Path(__file__).parent / "bench_results"
 METRICS = ["mrr", "ndcg", "keyword_coverage"]
 HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*#*\s*$")

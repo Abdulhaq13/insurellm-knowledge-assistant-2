@@ -5,7 +5,7 @@ from litellm import completion
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 
-from implementation.ingest import DB_NAME, embeddings
+from legacy.basic_rag.ingest import DB_NAME, embeddings
 
 from dotenv import load_dotenv
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential

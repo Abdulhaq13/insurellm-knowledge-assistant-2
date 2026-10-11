@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 from evaluation.budget import Budget, BudgetExceeded
-from evaluation.test import TestQuestion, load_tests
+from evaluation.question_set import TestQuestion, load_tests
 
 
 load_dotenv(override=True)
@@ -24,8 +24,8 @@ litellm.suppress_debug_info = True
 JUDGE_MODEL = "groq/qwen/qwen3.8-27b"
 RESULTS_DIR = Path(__file__).parent / "results"
 IMPLEMENTATIONS = {
-    "basic": "implementation.answer",
-    "pro": "pro_implementation.answer",
+    "basic": "legacy.basic_rag.answer",
+    "pro": "legacy.pro_rag.answer",
     "engine": "answer_engine.pipeline",
 }
 _impl_name = "basic"

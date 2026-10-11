@@ -11,8 +11,8 @@ from litellm import completion
 from litellm.exceptions import RateLimitError
 from tenacity import retry, retry_if_not_exception_type, stop_after_attempt, wait_exponential
 
-sys.path.insert(0, str(Path(__file__).parent.parent))  # allow running as a script
-from pro_implementation.embeddings import embed_documents
+sys.path.insert(0, str(Path(__file__).parents[2]))  # allow running as a script
+from legacy.pro_rag.embeddings import embed_documents
 
 
 load_dotenv(override=True)
@@ -23,7 +23,7 @@ ROOT = Path(__file__).parent.parent
 DB_NAME = str(ROOT / "preprocessed_db")
 CACHE_PATH = ROOT / "preprocessed_db" / "chunk_cache"
 collection_name = "docs"
-KNOWLEDGE_BASE_PATH = ROOT / "knowledge-base"
+KNOWLEDGE_BASE_PATH = ROOT.parent / "data" / "insurellm"
 AVERAGE_CHUNK_SIZE = 100
 # Groq free tier allows ~8K tokens/minute, so long documents are sent in parts of this size
 MAX_PART_CHARS = 6000

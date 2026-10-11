@@ -1,0 +1,64 @@
+{
+  "summary": {
+    "label": "engine_v1_holdout",
+    "impl": "engine",
+    "split": "holdout",
+    "limit": null,
+    "retrieval_only": false,
+    "timestamp": "2026-10-11T19:33:17",
+    "tests": 1,
+    "planned_tests": 50,
+    "error": "RateLimitError: litellm.RateLimitError: RateLimitError: GroqException - {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kx1xt42cebbvpmryp29hz0p0` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199356, Requested 3047. Please try again in 17m18.096s",
+    "answer_model": "groq/openai/gpt-oss-120b",
+    "judge_model": "groq/qwen/qwen3.8-27b",
+    "seconds": 212.5,
+    "overall": {
+      "tests": 1,
+      "mrr": 1.0,
+      "ndcg": 1.0,
+      "keyword_coverage": 100.0,
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "retrieval_complete_rate": 100.0,
+      "pass_rate": 100.0,
+      "failures": {
+        "retrieval_miss": 0,
+        "answer_mistake": 0
+      }
+    },
+    "by_category": {
+      "direct_fact": {
+        "tests": 1,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0,
+        "accuracy": 5.0,
+        "completeness": 5.0,
+        "relevance": 5.0,
+        "retrieval_complete_rate": 100.0,
+        "pass_rate": 100.0,
+        "failures": {
+          "retrieval_miss": 0,
+          "answer_mistake": 0
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "index": 2,
+      "question": "Who founded Insurellm?",
+      "category": "direct_fact",
+      "answer": "Insurellm was founded by **Avery Lancaster** in 2015[1].",
+      "feedback": "The generated answer is factually correct and perfectly matches the reference answer. It correctly identifies Avery Lancaster as the founder and 2015 as the founding year. It is concise, relevant, and contains no hallucinations or unnecessary information.",
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 1.0,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    }
+  ]
+}

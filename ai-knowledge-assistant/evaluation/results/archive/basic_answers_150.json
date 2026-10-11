@@ -1,0 +1,190 @@
+{
+  "summary": {
+    "label": "basic_answers_150",
+    "impl": "basic",
+    "split": "all",
+    "limit": null,
+    "retrieval_only": false,
+    "timestamp": "2026-10-11T17:53:41",
+    "tests": 10,
+    "planned_tests": 150,
+    "error": null,
+    "answer_model": "groq/openai/gpt-oss-120b",
+    "judge_model": "groq/qwen/qwen3.8-27b",
+    "seconds": 71.9,
+    "overall": {
+      "tests": 10,
+      "mrr": 0.9222,
+      "ndcg": 0.8975,
+      "keyword_coverage": 96.6667,
+      "accuracy": 4.7,
+      "completeness": 4.7,
+      "relevance": 5.0,
+      "retrieval_complete_rate": 90.0,
+      "pass_rate": 100.0,
+      "failures": {
+        "retrieval_miss": 0,
+        "answer_mistake": 0
+      }
+    },
+    "by_category": {
+      "direct_fact": {
+        "tests": 10,
+        "mrr": 0.9222,
+        "ndcg": 0.8975,
+        "keyword_coverage": 96.6667,
+        "accuracy": 4.7,
+        "completeness": 4.7,
+        "relevance": 5.0,
+        "retrieval_complete_rate": 90.0,
+        "pass_rate": 100.0,
+        "failures": {
+          "retrieval_miss": 0,
+          "answer_mistake": 0
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "index": 0,
+      "question": "Who won the prestigious IIOTY award in 2023?",
+      "category": "direct_fact",
+      "answer": "The **Insurellm\u202fIIOTY Innovator Award** for 2023 was awarded to **Maxine**. \ud83c\udf89",
+      "feedback": "The generated answer correctly identifies the winner as Maxine and the award as the IIOTY award for 2023. However, it is slightly less precise than the reference answer because it omits the winner's last name (Thompson) and uses the slightly different phrasing 'Insurellm IIOTY Innovator Award' instead of the full 'Insurellm Innovator of the Year (IIOTY) award'. While factually consistent with the core truth, the omission of the full name makes it less complete and precise than the reference.",
+      "accuracy": 4.0,
+      "completeness": 4.0,
+      "relevance": 5.0,
+      "mrr": 0.6666666666666666,
+      "ndcg": 0.6128488424965021,
+      "keyword_coverage": 66.66666666666666,
+      "retrieval_complete": false
+    },
+    {
+      "index": 1,
+      "question": "When was Insurellm founded?",
+      "category": "direct_fact",
+      "answer": "Insurellm was founded in **2015** by Avery\u202fLancaster.",
+      "feedback": "The generated answer is factually correct and directly addresses the question. It correctly identifies the founding year as 2015, which matches the reference answer. The inclusion of the founder's name (Avery Lancaster) is additional information not present in the reference answer, but it does not contradict the reference and is relevant context for a company founding question. Since the core fact (the year) is accurate and the question is fully answered, the accuracy and completeness are high. The relevance is also high as it directly answers the specific question asked.",
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 1.0,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 2,
+      "question": "Who founded Insurellm?",
+      "category": "direct_fact",
+      "answer": "Insurellm was founded in\u202f2015 by **Avery\u202fLancaster**.",
+      "feedback": "The generated answer is factually correct and perfectly aligns with the reference answer. It correctly identifies Avery Lancaster as the founder and includes the founding year (2015), which is present in the reference. The answer is concise, directly addresses the question, and contains no irrelevant information. All key details from the reference are covered without omission or error.",
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 0.8772153153380493,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 3,
+      "question": "How many employees does Insurellm currently have?",
+      "category": "direct_fact",
+      "answer": "Insurellm currently operates with a lean, highly efficient team of **32 employees**.",
+      "feedback": "The generated answer is factually accurate regarding the number of employees (32). However, it omits the specific timeframe ('as of 2025') provided in the reference answer, which adds necessary context to the data point. The addition of subjective descriptors like 'lean, highly efficient team' is not present in the reference and constitutes unnecessary embellishment, though it does not contradict the facts. The core question is answered correctly, but the lack of the temporal qualifier makes it slightly less complete than the reference.",
+      "accuracy": 5.0,
+      "completeness": 4.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 1.0,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 4,
+      "question": "What was Insurellm's first product?",
+      "category": "direct_fact",
+      "answer": "Insurellm\u2019s very first product was **Markellm** \u2013 the marketplace that connects consumers directly with insurance providers. It launched alongside the company\u2019s founding in 2015 and laid the groundwork for the broader suite of insurance\u2011tech platforms we offer today.",
+      "feedback": "The generated answer correctly identifies 'Markellm' as the first product and accurately describes it as a marketplace connecting consumers with insurance providers, which aligns perfectly with the reference answer. However, it includes additional specific details not present in the reference answer, such as the launch year (2015) and the claim that it launched 'alongside the company\u2019s founding.' While these details might be true in the broader context of the fictional company, they are not supported by the provided reference answer. In strict evaluation against the reference, adding unverified specific dates or historical claims reduces the accuracy score slightly from a perfect 5, as the reference does not confirm the 2015 date. The core factual claim is correct, but the extra specific detail introduces a minor risk of hallucination relative to the provided ground truth.",
+      "accuracy": 4.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 0.8892285295547985,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 5,
+      "question": "How many active contracts does Insurellm manage?",
+      "category": "direct_fact",
+      "answer": "Insurellm currently manages **32 active contracts** across its full suite of insurance\u2011technology products.",
+      "feedback": "The generated answer is factually accurate regarding the number of active contracts (32), which matches the reference answer. However, it lacks the specific detail found in the reference answer that these contracts span 'all eight product lines.' Instead, it uses the vaguer phrase 'full suite of insurance-technology products.' While not incorrect, it is less precise and complete than the reference. The answer is directly relevant to the question asked.",
+      "accuracy": 5.0,
+      "completeness": 4.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 0.9232872579831959,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 6,
+      "question": "Where is Insurellm's headquarters located?",
+      "category": "direct_fact",
+      "answer": "Insurellm\u2019s headquarters is located in **San\u202fFrancisco, California**.",
+      "feedback": "The generated answer is factually correct and aligns perfectly with the reference answer. It correctly identifies the location as San Francisco, California. The addition of 'California' is a standard and accurate geographic qualifier that does not contradict the reference. The answer is concise, directly addresses the prompt, and contains no hallucinations or irrelevant information.",
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 1.0,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 7,
+      "question": "How many office locations does Insurellm maintain?",
+      "category": "direct_fact",
+      "answer": "Insurellm maintains **five** office locations:\n\n1. San\u202fFrancisco (headquarters)  \n2. New\u202fYork  \n3. Austin  \n4. Chicago  \n5. Denver  \n\nThe rest of the team works remotely across the United States.",
+      "feedback": "The generated answer is factually accurate and perfectly aligns with the reference answer. It correctly identifies the number of office locations (5) and lists all the specific cities mentioned in the reference (San Francisco, New York, Austin, Chicago, and Denver). The additional detail about San Francisco being the headquarters and the remote work policy is consistent with the context of the fictional company and does not contradict the reference. The answer is thorough, direct, and relevant.",
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 0.987371476428394,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 8,
+      "question": "What is Insurellm's vision statement?",
+      "category": "direct_fact",
+      "answer": "Insurellm\u2019s vision statement is:\n\n**\u201cTo revolutionize the insurance industry through innovative technology that makes insurance accessible, transparent, and effortless for everyone.\u201d**",
+      "feedback": "The generated answer is highly accurate and captures the core message of the reference answer perfectly. It correctly identifies the key elements: revolutionizing the industry, using innovative technology, and making insurance accessible, transparent, and effortless. The only minor deviation is the addition of the phrase 'for everyone' at the end, which is not present in the reference answer. While this addition is logically consistent with the vision, it is technically an extra detail not found in the source material, preventing a perfect score for accuracy. The answer is complete and directly relevant to the question.",
+      "accuracy": 4.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 0.5555555555555555,
+      "ndcg": 0.7060961673497594,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 9,
+      "question": "How many Bizllm contracts has Insurellm secured?",
+      "category": "direct_fact",
+      "answer": "Insurellm has secured **7 Bizllm contracts** across its commercial\u2011insurance client base.",
+      "feedback": "The generated answer is factually correct and aligns perfectly with the reference answer. It correctly identifies the number of contracts as 7. While the phrasing 'across its commercial-insurance client base' is slightly more specific than the reference's 'commercial insurance contracts for Bizllm', it does not introduce any factual errors or hallucinations. It fully addresses the question with the correct data point.",
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 0.9785371043381609,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    }
+  ]
+}

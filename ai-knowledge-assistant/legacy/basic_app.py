@@ -1,7 +1,7 @@
 import gradio as gr
 from dotenv import load_dotenv
 
-from implementation.answer import stream_answer
+from legacy.basic_rag.answer import stream_answer
 
 load_dotenv(override=True)
 

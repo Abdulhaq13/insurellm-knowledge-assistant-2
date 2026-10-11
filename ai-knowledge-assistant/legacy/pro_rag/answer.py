@@ -10,7 +10,7 @@ from sentence_transformers import CrossEncoder
 from rank_bm25 import BM25Okapi
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from pro_implementation.embeddings import embed_query
+from legacy.pro_rag.embeddings import embed_query
 
 
 load_dotenv(override=True)
@@ -20,7 +20,7 @@ MODEL = "groq/openai/gpt-oss-120b"
 REWRITE_MODEL = "groq/openai/gpt-oss-20b"
 RERANK_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 DB_NAME = str(Path(__file__).parent.parent / "preprocessed_db")
-KNOWLEDGE_BASE_PATH = Path(__file__).parent.parent / "knowledge-base"
+KNOWLEDGE_BASE_PATH = Path(__file__).parents[2] / "data" / "insurellm"
 SUMMARIES_PATH = Path(__file__).parent.parent / "summaries"
 
 collection_name = "docs"

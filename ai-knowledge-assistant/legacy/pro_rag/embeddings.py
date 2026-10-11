@@ -2,7 +2,7 @@ from functools import lru_cache
 
 from sentence_transformers import SentenceTransformer
 
-# Shared by ingest.py and answer.py: changing it requires re-running pro_implementation/ingest.py
+# Shared by ingest.py and answer.py: changing it requires re-running legacy/pro_rag/ingest.py
 EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
 QUERY_PROMPT = "Represent this sentence for searching relevant passages: "
 

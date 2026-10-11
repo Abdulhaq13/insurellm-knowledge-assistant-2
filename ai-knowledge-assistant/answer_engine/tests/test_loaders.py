@@ -1,4 +1,4 @@
-"""Run from "AI knowledge Assisstant/": python -m pytest answer_engine/tests -q"""
+"""Run from "ai-knowledge-assistant/": python -m pytest answer_engine/tests -q"""
 import hashlib
 from pathlib import Path
 
@@ -7,7 +7,7 @@ import pytest
 from answer_engine.loaders import SUPPORTED_EXTENSIONS, TABLE_HEADER_EVERY, NoTextFoundError, load_file
 
 FIXTURES = Path(__file__).parent / "fixtures"
-KNOWLEDGE_BASE = Path(__file__).parents[2] / "knowledge-base"
+KNOWLEDGE_BASE = Path(__file__).parents[2] / "data" / "insurellm"
 
 
 def load(name: str):

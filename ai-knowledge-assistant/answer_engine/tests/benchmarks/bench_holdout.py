@@ -1,7 +1,7 @@
 """Old vs new retrieval on Terminal B's holdout split (evaluation.eval.split_tests("holdout"), 50 tests).
-Reads saved per-question results only: no models, no API calls. Run from "AI knowledge Assisstant/":
+Reads saved per-question results only: no models, no API calls. Run from "ai-knowledge-assistant/":
 
-    python -m answer_engine.tests.bench_holdout [new run label]
+    python -m answer_engine.tests.benchmarks.bench_holdout [new run label]
 
 Caveat: the new pipeline's settings were chosen while looking at results for all 150 tests, so this split
 was not truly unseen. Report-only: don't change settings based on this output.
@@ -16,7 +16,7 @@ from answer_engine.config import ROOT
 from evaluation.eval import split_tests
 
 RESULTS_DIR = Path(__file__).parent / "bench_results"
-BASELINE = ROOT / "evaluation" / "results" / "after_bge_1200_k6_retrieval.json"
+BASELINE = ROOT / "evaluation" / "results" / "archive" / "after_bge_1200_k6_retrieval.json"
 METRICS = ["mrr", "ndcg", "keyword_coverage"]
 
 

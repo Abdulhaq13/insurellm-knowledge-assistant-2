@@ -213,7 +213,7 @@ Only promise what is delivered. Status of each capability described above:
 | Capability | Status |
 |---|---|
 | RAG chat with conversation memory and a sources panel | ✅ Built (`app.py`, `implementation/`) |
-| Query rewriting, multi-query retrieval, LLM re-ranking | ✅ Built (`pro_implementation/`), needs a retry limit and rerank validation |
+| Query rewriting, multi-query retrieval, LLM re-ranking | ✅ Built (`legacy/pro_rag/`), needs a retry limit and rerank validation |
 | Evaluation suite (MRR, nDCG, coverage, LLM judge) | ✅ Built. Fix the CLI crash in `evaluation/eval.py:186` |
 | Free-model setup (Groq/Gemini with local embeddings) | 🔧 To do: current plan for development |
 | `.gitignore`, secrets handling, pinned requirements | 🔧 To do: before any deployment |

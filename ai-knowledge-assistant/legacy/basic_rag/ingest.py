@@ -8,7 +8,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 
 DB_NAME = str(Path(__file__).parent.parent / "vector_db")
-KNOWLEDGE_BASE = str(Path(__file__).parent.parent / "knowledge-base")
+KNOWLEDGE_BASE = str(Path(__file__).parents[2] / "data" / "insurellm")
 
 # answer.py imports these, so ingest and retrieval always use the same model; changing them requires re-ingesting
 EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"

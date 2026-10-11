@@ -2,7 +2,7 @@
 
 A retrieval-augmented generation (RAG) assistant that answers questions **only from your own documents** and cites the sources it used. Upload PDFs, Word files, spreadsheets, web pages, Markdown, text or scanned images, then ask questions in a chat UI.
 
-The demo knowledge base is **Insurellm**, a fictional insurance-tech company (`knowledge-base/`, 76 Markdown files). Answers are written by OpenAI `gpt-4.1-mini`, at roughly $0.001–0.0015 per question. Everything else is free: local embeddings, reranker and OCR, plus the Groq free tier for the optional query helper and the evaluation judge.
+The demo knowledge base is **Insurellm**, a fictional insurance-tech company (`data/insurellm/`, 76 Markdown files). Answers are written by OpenAI `gpt-4.1-mini`, at roughly $0.001–0.0015 per question. Everything else is free: local embeddings, reranker and OCR, plus the Groq free tier for the optional query helper and the evaluation judge.
 
 ## How it works
 
@@ -36,7 +36,7 @@ flowchart LR
 Requires Python 3.13, an [OpenAI API key](https://platform.openai.com/api-keys) (for answers), and a free [Groq API key](https://console.groq.com/keys) (for the evaluation judge and the optional query helper).
 
 ```powershell
-cd "AI knowledge Assisstant"
+cd ai-knowledge-assistant
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1          # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
@@ -55,8 +55,8 @@ To change models (e.g. back to a free Groq model), edit `ANSWER_MODEL` in `answe
 ## Run
 
 ```powershell
-python -m answer_engine.pipeline ingest knowledge-base   # index the demo documents (first run only)
-python app_engine.py                                     # opens the UI at http://127.0.0.1:7860
+python -m answer_engine.pipeline ingest data/insurellm  # index the demo documents (first run only)
+python app.py                                            # opens the UI at http://127.0.0.1:7860
 ```
 
 The UI has two tabs:
@@ -105,11 +105,15 @@ python -m evaluation.failures evaluation/results/run1.json                   # l
 ## Project layout
 
 ```
-answer_engine/      the RAG engine (above)
-app_engine.py       Gradio UI on answer_engine
-evaluation/         test set, eval CLI, failure report, test generator
-knowledge-base/     demo documents (Insurellm)
-implementation/     original basic pipeline (legacy, used by app.py)
-pro_implementation/ earlier advanced pipeline (legacy)
-engine_data/        generated indexes (gitignored)
+answer_engine/          the RAG engine (above)
+  tests/                pytest tests, fixtures and benchmarks/ (retrieval benchmarks)
+app.py                  Gradio UI on answer_engine
+evaluation/             test set (tests.jsonl), eval CLI, failure report, test generator
+  results/              saved eval runs; early runs are in results/archive/
+data/insurellm/         demo documents (Insurellm)
+legacy/                 old pipelines, kept for old-vs-new comparisons
+  basic_rag/            original basic pipeline (python -m legacy.basic_app)
+  pro_rag/              earlier advanced pipeline
+  evaluator_dashboard.py  old Gradio eval dashboard (python -m legacy.evaluator_dashboard)
+engine_data/            generated indexes (gitignored)
 ```

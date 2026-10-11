@@ -1,0 +1,134 @@
+{
+  "summary": {
+    "label": "engine_v1_answers",
+    "impl": "engine",
+    "split": "all",
+    "limit": null,
+    "retrieval_only": false,
+    "timestamp": "2026-10-11T19:28:52",
+    "tests": 6,
+    "planned_tests": 150,
+    "error": "RateLimitError: litellm.RateLimitError: RateLimitError: GroqException - {\"error\":{\"message\":\"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kx1xt42cebbvpmryp29hz0p0` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 198498, Requested 1622. Please try again in 51.84s. Ne",
+    "answer_model": "groq/openai/gpt-oss-120b",
+    "judge_model": "groq/qwen/qwen3.8-27b",
+    "seconds": 236.7,
+    "overall": {
+      "tests": 6,
+      "mrr": 1.0,
+      "ndcg": 0.9775,
+      "keyword_coverage": 100.0,
+      "accuracy": 5.0,
+      "completeness": 4.8333,
+      "relevance": 5.0,
+      "retrieval_complete_rate": 100.0,
+      "pass_rate": 100.0,
+      "failures": {
+        "retrieval_miss": 0,
+        "answer_mistake": 0
+      }
+    },
+    "by_category": {
+      "direct_fact": {
+        "tests": 6,
+        "mrr": 1.0,
+        "ndcg": 0.9775,
+        "keyword_coverage": 100.0,
+        "accuracy": 5.0,
+        "completeness": 4.8333,
+        "relevance": 5.0,
+        "retrieval_complete_rate": 100.0,
+        "pass_rate": 100.0,
+        "failures": {
+          "retrieval_miss": 0,
+          "answer_mistake": 0
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "index": 0,
+      "question": "Who won the prestigious IIOTY award in 2023?",
+      "category": "direct_fact",
+      "answer": "Maxine\u202fThompson won the prestigious Insurellm\u202fIIOTY Innovator Award in\u202f2023[1].",
+      "feedback": "The generated answer is factually correct and fully aligns with the reference answer. It correctly identifies Maxine Thompson as the winner of the IIOTY award in 2023. The slight variation in the award's full name ('Insurellm IIOTY Innovator Award' vs. 'Insurellm Innovator of the Year (IIOTY) award') does not detract from the accuracy, as the core information (winner, award acronym, year) is perfectly matched. The answer is complete, relevant, and directly addresses the question without unnecessary additions.",
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 1.0,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 1,
+      "question": "When was Insurellm founded?",
+      "category": "direct_fact",
+      "answer": "Insurellm was founded in\u202f2015[1][2].",
+      "feedback": "The generated answer is factually correct, stating that Insurellm was founded in 2015, which matches the reference answer exactly. It is complete as it provides the specific year requested. It is highly relevant, directly answering the question without unnecessary elaboration. The inclusion of citation markers [1][2] is acceptable in a chatbot context and does not detract from the quality of the answer.",
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 1.0,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 2,
+      "question": "Who founded Insurellm?",
+      "category": "direct_fact",
+      "answer": "Insurellm was founded by **Avery Lancaster** in 2015[1].",
+      "feedback": "The generated answer is factually correct and perfectly matches the reference answer. It correctly identifies Avery Lancaster as the founder and 2015 as the founding year. It is concise, relevant, and contains no hallucinations or unnecessary information.",
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 1.0,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 3,
+      "question": "How many employees does Insurellm currently have?",
+      "category": "direct_fact",
+      "answer": "Insurellm currently has **32 employees**[1][2].",
+      "feedback": "The generated answer is factually accurate, correctly identifying the number of employees as 32. It is highly relevant and directly answers the question. However, it is slightly less complete than the reference answer because it omits the specific timeframe ('as of 2025'), which provides important context for the data point. The inclusion of citation markers [1][2] is acceptable in a chatbot context but not present in the reference.",
+      "accuracy": 5.0,
+      "completeness": 4.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 0.9642276612595898,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 4,
+      "question": "What was Insurellm's first product?",
+      "category": "direct_fact",
+      "answer": "Insurellm\u2019s first product was **Markellm**, the marketplace that connects consumers with insurance providers[1].",
+      "feedback": "The generated answer is factually correct and perfectly matches the reference answer. It correctly identifies 'Markellm' as the first product and accurately describes it as a marketplace connecting consumers with insurance providers. The inclusion of a citation marker [1] is acceptable in a chatbot context and does not detract from the accuracy. The answer is concise, relevant, and directly addresses the question without unnecessary fluff.",
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 0.9089904867631557,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    },
+    {
+      "index": 5,
+      "question": "How many active contracts does Insurellm manage?",
+      "category": "direct_fact",
+      "answer": "Insurellm manages **32 active contracts** across its eight product lines[1][2].",
+      "feedback": "The generated answer is factually correct and perfectly aligns with the reference answer. It correctly identifies the number of active contracts (32) and the scope (eight product lines). The inclusion of citation markers [1][2] is acceptable in a chatbot context and does not detract from the accuracy. The answer is complete, relevant, and directly addresses the user's question without unnecessary fluff.",
+      "accuracy": 5.0,
+      "completeness": 5.0,
+      "relevance": 5.0,
+      "mrr": 1.0,
+      "ndcg": 0.9916516243494735,
+      "keyword_coverage": 100.0,
+      "retrieval_complete": true
+    }
+  ]
+}
