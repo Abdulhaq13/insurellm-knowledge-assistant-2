@@ -2,7 +2,7 @@
 
 A retrieval-augmented generation (RAG) assistant that answers questions **only from your own documents** and cites the sources it used. Upload PDFs, Word files, spreadsheets, web pages, Markdown, text or scanned images, then ask questions in a chat UI.
 
-The demo knowledge base is **Insurellm**, a fictional insurance-tech company (`knowledge-base/`, 76 Markdown files). Everything runs on free tiers: local embeddings, reranker and OCR, and the Groq free tier for the LLM.
+The demo knowledge base is **Insurellm**, a fictional insurance-tech company (`knowledge-base/`, 76 Markdown files). Answers are written by OpenAI `gpt-4.1-mini`, at roughly $0.001–0.0015 per question. Everything else is free: local embeddings, reranker and OCR, plus the Groq free tier for the optional query helper and the evaluation judge.
 
 ## How it works
 
@@ -16,7 +16,7 @@ flowchart LR
     subgraph Answer["Answer a question"]
         Q[Question + chat history] --> R[retrieval.py<br/>vector + keyword search<br/>cross-encoder rerank]
         I --> R
-        R --> G[generation.py<br/>grounded prompt<br/>Groq gpt-oss-120b]
+        R --> G[generation.py<br/>grounded prompt<br/>OpenAI gpt-4.1-mini]
         G --> A[Answer with citations 1 2<br/>+ sources panel]
     end
 ```
@@ -27,13 +27,13 @@ flowchart LR
 | `chunking.py` | Splits sections into ~1200-character chunks. Never mixes two sections in one chunk, keeps table rows whole, and prefixes each chunk with its `Title > Section` path. |
 | `index.py` | One Chroma database per client in `engine_data/<client_id>/` (local `bge-small-en-v1.5` embeddings), plus a BM25 keyword index. Adding or deleting one document touches only that document's chunks. |
 | `retrieval.py` | Hybrid vector + BM25 search, a local cross-encoder rerank, and extra chunks from other documents for "how many / which / list" questions. |
-| `generation.py` | Answers only from the retrieved excerpts, cites them as `[1]`, says so when the information isn't in the documents, and ignores instructions embedded in documents. |
+| `generation.py` | Answers only from the retrieved excerpts and only what was asked. Cites excerpts as `[1]`, states calculations only when the numbers support them exactly, says so when the information isn't in the documents, and ignores instructions embedded in documents. |
 | `pipeline.py` | Public API and CLI: `add_file`, `add_folder`, `remove_document`, `list_documents`, `answer_question`, `stream_answer`. |
 | `config.py` | Every model name and tuning setting in one place. |
 
 ## Install
 
-Requires Python 3.13 and a free [Groq API key](https://console.groq.com/keys).
+Requires Python 3.13, an [OpenAI API key](https://platform.openai.com/api-keys) (for answers), and a free [Groq API key](https://console.groq.com/keys) (for the evaluation judge and the optional query helper).
 
 ```powershell
 cd "AI knowledge Assisstant"
@@ -46,8 +46,11 @@ python -m answer_engine.loaders --prepare-ocr   # one-time OCR model download
 Create `.env` in this folder (never commit it):
 
 ```
-GROQ_API_KEY=your_key_here
+OPENAI_API_KEY=your_openai_key
+GROQ_API_KEY=your_groq_key
 ```
+
+To change models (e.g. back to a free Groq model), edit `ANSWER_MODEL` in `answer_engine/config.py`.
 
 ## Run
 
