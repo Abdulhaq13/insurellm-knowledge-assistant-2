@@ -1,5 +1,6 @@
 """Chat UI on answer_engine.pipeline, plus a Documents tab to upload, list and delete files.
 Run from "AI knowledge Assisstant/": python app_engine.py"""
+import re
 from pathlib import Path
 
 import gradio as gr
@@ -18,12 +19,26 @@ EMPTY_INDEX_HINT = (
     "*No documents indexed yet.* Upload files on the **Documents** tab, or index a whole folder with "
     "`python -m answer_engine.pipeline ingest knowledge-base`."
 )
+# The answer prompt says "you don't have that information in the available documents" when nothing answers
+# the question. Partial answers start with facts, so only the first sentence is checked, and it must also talk
+# about the information/documents ("Carllm is not available in Europe" is a real answer, not a refusal).
+NO_ANSWER = re.compile(
+    r"\b(don['’]t|do not|doesn['’]t|does not) (have|contain|include|mention)\b|\bno (information|details|data|mention)\b"
+    r"|\b(isn['’]t|is not|aren['’]t|are not|not) (available|mentioned|provided|included|specified)\b",
+    re.IGNORECASE,
+)
+ABOUT_SOURCES = re.compile(r"\b(information|details|documents?|excerpts?|context|sources?|records?)\b", re.IGNORECASE)
 
 
 # ---------- chat ----------
 
 
-def format_sources(chunks) -> str:
+def is_no_answer(answer: str) -> bool:
+    first_sentence = re.split(r"(?<=[.!?])\s", answer.strip(), maxsplit=1)[0]
+    return bool(NO_ANSWER.search(first_sentence) and ABOUT_SOURCES.search(first_sentence))
+
+
+def format_sources(chunks, used: bool = True) -> str:
     if not chunks:
         return "*No matching documents were found.*"
     parts = []
@@ -31,7 +46,8 @@ def format_sources(chunks) -> str:
         meta = chunk.metadata
         section = (meta.get("section") or meta.get("title") or "").replace(" > ", " › ")
         parts.append(f"### {i}. {section}\n`{meta.get('source', '')}`\n\n{chunk.page_content}")
-    return "## Sources used\n\n" + "\n\n---\n\n".join(parts)
+    heading = "## Sources used" if used else "## Closest matches (not used in the answer)"
+    return f"{heading}\n\n" + "\n\n---\n\n".join(parts)
 
 
 def chat(history):
@@ -44,6 +60,8 @@ def chat(history):
                 sources = format_sources(chunks)
             history[-1]["content"] = answer
             yield history, sources
+        if chunks and is_no_answer(answer):
+            yield history, format_sources(chunks, used=False)
     except Exception as error:  # keep the UI alive if retrieval or the LLM fails
         history[-1]["content"] = f"⚠️ Sorry, I couldn't answer that ({type(error).__name__}: {error})."
         yield history, sources or ""
