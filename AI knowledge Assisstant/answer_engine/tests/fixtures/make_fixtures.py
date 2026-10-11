@@ -7,6 +7,7 @@ from pathlib import Path
 import docx
 import openpyxl
 from fpdf import FPDF
+from PIL import Image, ImageDraw, ImageFont
 
 HERE = Path(__file__).parent
 
@@ -141,10 +142,53 @@ def make_plain_pdf(path: Path):
     pdf.output(str(path))
 
 
+SCAN_LINES = ["INVOICE 4821", "Customer: Northwind Traders", "Total due: 950 USD"]
+
+
+def scan_image() -> Image.Image:
+    """A page photo: black text on an off-white background, as a scanner would produce."""
+    image = Image.new("RGB", (1000, 400), (245, 243, 238))
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.load_default(size=40)
+    for i, line in enumerate(SCAN_LINES):
+        draw.text((60, 50 + i * 100), line, fill=(20, 20, 20), font=font)
+    return image
+
+
+def add_scanned_page(pdf: FPDF, image: Image.Image):
+    pdf.add_page()
+    pdf.image(image, x=10, y=10, w=190)  # only an image, no text layer
+
+
 def make_scanned_pdf(path: Path):
     pdf = FPDF()
+    add_scanned_page(pdf, scan_image())
+    pdf.output(str(path))
+
+
+def make_mixed_pdf(path: Path):
+    pdf = FPDF()
     pdf.add_page()
-    pdf.rect(20, 20, 100, 60, style="F")  # an image-like page with no text layer
+    pdf.set_font("Helvetica", "", 11)
+    pdf.multi_cell(0, 6, "This first page has a normal text layer about shipping terms.")
+    add_scanned_page(pdf, scan_image())
+    pdf.output(str(path))
+
+
+def make_stamped_pdf(path: Path):
+    """A scanned page on which the scanner printed a small text stamp."""
+    pdf = FPDF()
+    pdf.set_auto_page_break(False)
+    add_scanned_page(pdf, scan_image())
+    pdf.set_font("Helvetica", "", 8)
+    pdf.set_xy(10, 280)
+    pdf.cell(0, 5, "Page 1")
+    pdf.output(str(path))
+
+
+def make_blank_scan_pdf(path: Path):
+    pdf = FPDF()
+    add_scanned_page(pdf, Image.new("RGB", (1000, 400), (245, 243, 238)))
     pdf.output(str(path))
 
 
@@ -159,6 +203,11 @@ def main():
     make_pdf_with_headings(HERE / "headings.pdf")
     make_plain_pdf(HERE / "plain.pdf")
     make_scanned_pdf(HERE / "scanned.pdf")
+    make_mixed_pdf(HERE / "mixed.pdf")
+    make_stamped_pdf(HERE / "stamped.pdf")
+    make_blank_scan_pdf(HERE / "blank.pdf")
+    scan_image().save(HERE / "scan.png")
+    scan_image().save(HERE / "scan.jpg", quality=80)
     print(f"Fixtures written to {HERE}")
 
 

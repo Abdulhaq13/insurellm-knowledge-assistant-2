@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from answer_engine.loaders import SUPPORTED_EXTENSIONS, TABLE_HEADER_EVERY, ScannedPDFError, load_file
+from answer_engine.loaders import SUPPORTED_EXTENSIONS, TABLE_HEADER_EVERY, NoTextFoundError, load_file
 
 FIXTURES = Path(__file__).parent / "fixtures"
 KNOWLEDGE_BASE = Path(__file__).parents[2] / "knowledge-base"
@@ -19,7 +19,7 @@ def paths(doc) -> list[str]:
 
 
 def test_supported_extensions():
-    assert {".md", ".txt", ".pdf", ".docx", ".xlsx", ".csv", ".html"} <= SUPPORTED_EXTENSIONS
+    assert {".md", ".txt", ".pdf", ".docx", ".xlsx", ".csv", ".html", ".png", ".jpg", ".jpeg"} <= SUPPORTED_EXTENSIONS
 
 
 def test_unknown_extension_lists_supported_types(tmp_path):
@@ -126,9 +126,82 @@ def test_pdf_without_headings_uses_pages():
     assert paths(doc) == ["Page 1", "Page 2"]
 
 
-def test_scanned_pdf_raises_clear_error():
-    with pytest.raises(ScannedPDFError, match="OCR"):
-        load("scanned.pdf")
+SCAN_WORDS = ["INVOICE 4821", "Northwind Traders", "950 USD"]
+
+
+def assert_scan_text(text: str):
+    for words in SCAN_WORDS:
+        assert words in text, f"{words!r} not found in OCR text {text!r}"
+    lines = text.splitlines()
+    assert lines[0].startswith("INVOICE")
+    assert text.index("Northwind") < text.index("Total due")  # reading order kept
+
+
+@pytest.mark.parametrize("name,file_type", [("scan.png", "png"), ("scan.jpg", "jpg")])
+def test_image_ocr(name, file_type):
+    doc = load(name)
+    assert doc.file_type == file_type
+    assert doc.title == "scan"
+    assert doc.metadata["ocr"] is True
+    assert len(doc.sections) == 1 and doc.sections[0].heading_path == []
+    assert_scan_text(doc.sections[0].text)
+
+
+def test_jpeg_extension(tmp_path):
+    path = tmp_path / "photo.jpeg"
+    path.write_bytes((FIXTURES / "scan.jpg").read_bytes())
+    assert load_file(path, "photo.jpeg").file_type == "jpg"
+
+
+def test_scanned_pdf_is_ocrd():
+    doc = load("scanned.pdf")
+    assert doc.metadata["ocr_pages"] == [1]
+    assert paths(doc) == ["Page 1"]
+    assert_scan_text(doc.sections[0].text)
+
+
+def test_mixed_pdf_only_ocrs_pages_without_text():
+    doc = load("mixed.pdf")
+    assert doc.metadata["ocr_pages"] == [2]
+    assert paths(doc) == ["Page 1", "Page 2"]
+    assert doc.sections[0].text == "This first page has a normal text layer about shipping terms."
+    assert_scan_text(doc.sections[1].text)
+
+
+def test_scanned_page_with_small_text_stamp_is_ocrd():
+    doc = load("stamped.pdf")
+    assert doc.metadata["ocr_pages"] == [1]
+    assert_scan_text(doc.sections[0].text)
+    assert doc.sections[0].text.splitlines()[-1] == "Page 1"  # the stamp is read too, at the bottom
+
+
+def test_pdf_with_text_layer_never_uses_ocr(monkeypatch):
+    import answer_engine.loaders as loaders
+
+    monkeypatch.setattr(loaders, "_ocr_image", lambda image: pytest.fail("OCR called on a text page"))
+    assert load("headings.pdf").metadata["ocr_pages"] == []
+    assert load("plain.pdf").metadata["ocr_pages"] == []
+
+
+def test_blank_scan_raises_clear_error():
+    with pytest.raises(NoTextFoundError, match="No readable text"):
+        load("blank.pdf")
+
+
+def test_image_without_text_raises_clear_error(tmp_path):
+    from PIL import Image
+
+    path = tmp_path / "empty.png"
+    Image.new("RGB", (400, 200), "white").save(path)
+    with pytest.raises(NoTextFoundError):
+        load_file(path, "empty.png")
+
+
+def test_prepare_ocr_loads_engine_once():
+    from answer_engine.loaders import _ocr_engine, prepare_ocr
+
+    prepare_ocr()
+    assert _ocr_engine() is _ocr_engine()
 
 
 def test_xlsx_one_table_per_sheet():
