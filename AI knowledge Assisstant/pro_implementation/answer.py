@@ -1,10 +1,11 @@
-from openai import OpenAI
 from dotenv import load_dotenv
 from chromadb import PersistentClient
 from litellm import completion
 from pydantic import BaseModel, Field
 from pathlib import Path
 from tenacity import retry, wait_exponential
+
+from pro_implementation.embeddings import embed_query
 
 
 load_dotenv(override=True)
@@ -16,10 +17,7 @@ KNOWLEDGE_BASE_PATH = Path(__file__).parent.parent / "knowledge-base"
 SUMMARIES_PATH = Path(__file__).parent.parent / "summaries"
 
 collection_name = "docs"
-embedding_model = "text-embedding-3-large"
 wait = wait_exponential(multiplier=1, min=10, max=240)
-
-openai = OpenAI()
 
 chroma = PersistentClient(path=DB_NAME)
 collection = chroma.get_or_create_collection(collection_name)
@@ -117,7 +115,7 @@ def merge_chunks(chunks, reranked):
 
 
 def fetch_context_unranked(question):
-    query = openai.embeddings.create(model=embedding_model, input=[question]).data[0].embedding
+    query = embed_query(question)
     results = collection.query(query_embeddings=[query], n_results=RETRIEVAL_K)
     chunks = []
     for result in zip(results["documents"][0], results["metadatas"][0]):

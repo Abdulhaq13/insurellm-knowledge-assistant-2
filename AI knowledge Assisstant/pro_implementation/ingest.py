@@ -1,5 +1,5 @@
+import sys
 from pathlib import Path
-from openai import OpenAI
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from chromadb import PersistentClient
@@ -8,6 +8,9 @@ from litellm import completion
 from multiprocessing import Pool
 from tenacity import retry, wait_exponential
 
+sys.path.insert(0, str(Path(__file__).parent.parent))  # allow running as a script
+from pro_implementation.embeddings import embed_documents
+
 
 load_dotenv(override=True)
 
@@ -15,16 +18,12 @@ MODEL = "openai/gpt-4.1-nano"
 
 DB_NAME = str(Path(__file__).parent.parent / "preprocessed_db")
 collection_name = "docs"
-embedding_model = "text-embedding-3-large"
 KNOWLEDGE_BASE_PATH = Path(__file__).parent.parent / "knowledge-base"
 AVERAGE_CHUNK_SIZE = 100
 wait = wait_exponential(multiplier=1, min=10, max=240)
 
 
 WORKERS = 3
-
-openai = OpenAI()
-
 
 class Result(BaseModel):
     page_content: str
@@ -127,8 +126,7 @@ def create_embeddings(chunks):
         chroma.delete_collection(collection_name)
 
     texts = [chunk.page_content for chunk in chunks]
-    emb = openai.embeddings.create(model=embedding_model, input=texts).data
-    vectors = [e.embedding for e in emb]
+    vectors = embed_documents(texts)
 
     collection = chroma.get_or_create_collection(collection_name)
 
