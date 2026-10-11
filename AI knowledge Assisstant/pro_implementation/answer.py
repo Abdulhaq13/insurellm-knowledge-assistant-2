@@ -3,7 +3,7 @@ from chromadb import PersistentClient
 from litellm import completion
 from pydantic import BaseModel, Field
 from pathlib import Path
-from tenacity import retry, wait_exponential
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 from pro_implementation.embeddings import embed_query
 
@@ -12,12 +12,14 @@ load_dotenv(override=True)
 
 # MODEL = "openai/gpt-4.1-nano"
 MODEL = "groq/openai/gpt-oss-120b"
+REWRITE_MODEL = "groq/openai/gpt-oss-20b"
 DB_NAME = str(Path(__file__).parent.parent / "preprocessed_db")
 KNOWLEDGE_BASE_PATH = Path(__file__).parent.parent / "knowledge-base"
 SUMMARIES_PATH = Path(__file__).parent.parent / "summaries"
 
 collection_name = "docs"
 wait = wait_exponential(multiplier=1, min=10, max=240)
+stop = stop_after_attempt(4)
 
 chroma = PersistentClient(path=DB_NAME)
 collection = chroma.get_or_create_collection(collection_name)
@@ -48,7 +50,7 @@ class RankOrder(BaseModel):
     )
 
 
-@retry(wait=wait)
+@retry(wait=wait, stop=stop, reraise=True)
 def rerank(question, chunks):
     system_prompt = """
 You are a document re-ranker.
@@ -69,7 +71,13 @@ Reply only with the list of ranked chunk ids, nothing else. Include all the chun
     response = completion(model=MODEL, messages=messages, response_format=RankOrder)
     reply = response.choices[0].message.content
     order = RankOrder.model_validate_json(reply).order
-    return [chunks[i - 1] for i in order]
+    # Keep valid, unique ids in the LLM's order, then append any chunks it left out
+    seen = []
+    for i in order:
+        if 1 <= i <= len(chunks) and i not in seen:
+            seen.append(i)
+    seen += [i for i in range(1, len(chunks) + 1) if i not in seen]
+    return [chunks[i - 1] for i in seen]
 
 
 def make_rag_messages(question, history, chunks):
@@ -84,15 +92,19 @@ def make_rag_messages(question, history, chunks):
     )
 
 
-@retry(wait=wait)
-def rewrite_query(question, history=[]):
+def format_history(history):
+    return "\n".join(f"{turn['role']}: {turn['content']}" for turn in history) or "(no prior conversation)"
+
+
+@retry(wait=wait, stop=stop, reraise=True)
+def _rewrite_query(question, history):
     """Rewrite the user's question to be a more specific question that is more likely to surface relevant content in the Knowledge Base."""
     message = f"""
 You are in a conversation with a user, answering questions about the company Insurellm.
 You are about to look up information in a Knowledge Base to answer the user's question.
 
 This is the history of your conversation so far with the user:
-{history}
+{format_history(history)}
 
 And this is the user's current question:
 {question}
@@ -101,8 +113,17 @@ Respond only with a short, refined question that you will use to search the Know
 It should be a VERY short specific question most likely to surface content. Focus on the question details.
 IMPORTANT: Respond ONLY with the precise knowledgebase query, nothing else.
 """
-    response = completion(model=MODEL, messages=[{"role": "system", "content": message}])
-    return response.choices[0].message.content
+    response = completion(model=REWRITE_MODEL, messages=[{"role": "system", "content": message}])
+    return response.choices[0].message.content.strip()
+
+
+def rewrite_query(question, history=[]):
+    """Rewrite the question using the chat history; fall back to the original question if the LLM fails."""
+    try:
+        return _rewrite_query(question, history) or question
+    except Exception as e:
+        print(f"rewrite_query failed, using original question: {type(e).__name__}: {str(e)[:200]}")
+        return question
 
 
 def merge_chunks(chunks, reranked):
@@ -123,8 +144,8 @@ def fetch_context_unranked(question):
     return chunks
 
 
-def fetch_context(original_question):
-    rewritten_question = rewrite_query(original_question)
+def fetch_context(original_question, history=[]):
+    rewritten_question = rewrite_query(original_question, history)
     chunks1 = fetch_context_unranked(original_question)
     chunks2 = fetch_context_unranked(rewritten_question)
     chunks = merge_chunks(chunks1, chunks2)
@@ -132,12 +153,11 @@ def fetch_context(original_question):
     return reranked[:FINAL_K]
 
 
-@retry(wait=wait)
 def answer_question(question: str, history: list[dict] = []) -> tuple[str, list]:
     """
     Answer a question using RAG and return the answer and the retrieved context
     """
-    chunks = fetch_context(question)
+    chunks = fetch_context(question, history)
     messages = make_rag_messages(question, history, chunks)
     response = completion(model=MODEL, messages=messages)
     return response.choices[0].message.content, chunks
