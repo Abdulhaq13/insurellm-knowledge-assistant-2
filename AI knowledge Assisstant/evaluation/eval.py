@@ -308,18 +308,59 @@ def summarize(rows: list[dict], metrics: list[str], retrieval_only: bool) -> dic
     return stats
 
 
-def run_batch(limit: int | None, retrieval_only: bool, label: str, split: str = "all") -> Path:
-    """Evaluate many tests and save per-test rows plus overall and per-category averages to JSON."""
+def write_results(path: Path, rows: list[dict], settings: dict, metrics: list[str], error: str | None,
+                  planned: int, seconds: float) -> dict:
+    by_category = defaultdict(list)
+    for row in rows:
+        by_category[row["category"]].append(row)
+    retrieval_only = settings["retrieval_only"]
+    summary = {
+        **settings,
+        "timestamp": datetime.now().isoformat(timespec="seconds"),
+        "tests": len(rows),
+        "planned_tests": planned,
+        "error": error,
+        "answer_model": None if retrieval_only else answer_model_name(),
+        "judge_model": None if retrieval_only else JUDGE_MODEL,
+        "seconds": round(seconds, 1),
+        "overall": summarize(rows, metrics, retrieval_only),
+        "by_category": {
+            cat: summarize(rs, metrics, retrieval_only) for cat, rs in sorted(by_category.items())
+        },
+    }
+    path.write_text(json.dumps({"summary": summary, "rows": rows}, indent=2), encoding="utf-8")
+    return summary
+
+
+def run_batch(limit: int | None, retrieval_only: bool, label: str, split: str = "all", resume: bool = False) -> Path:
+    """Evaluate many tests and save per-test rows plus overall and per-category averages to JSON.
+    The file is rewritten after every test; with resume=True, tests already in it are skipped."""
     tests = sample_tests(split_tests(split), limit)
     metrics = ["mrr", "ndcg", "keyword_coverage"]
     if not retrieval_only:
         metrics += ["accuracy", "completeness", "relevance"]
+    settings = {"label": label, "impl": _impl_name, "split": split, "limit": limit, "retrieval_only": retrieval_only}
 
-    rows = []
+    RESULTS_DIR.mkdir(exist_ok=True)
+    path = RESULTS_DIR / f"{label}.json"
+    rows, seconds = [], 0.0
+    if path.exists():
+        if not resume:
+            sys.exit(f"{path} already exists: pass --resume to continue it, or use another --label")
+        previous = json.loads(path.read_text(encoding="utf-8"))
+        old = previous["summary"]
+        mismatched = [k for k, v in settings.items() if old.get(k, v) != v]
+        if mismatched:
+            sys.exit(f"Can't resume {path}: settings differ ({', '.join(mismatched)})")
+        rows, seconds = previous["rows"], old.get("seconds", 0.0)
+    done = {row["index"] for row in rows}
+    todo = [(i, t) for i, t in tests if i not in done]
+    print(f"{len(tests)} tests, {len(done)} already done, {len(todo)} to run", flush=True)
+
     error = None
     start = time.time()
     try:
-        for index, (test_index, test) in enumerate(tests, start=1):
+        for count, (test_index, test) in enumerate(todo, start=len(done) + 1):
             row = {"index": test_index, "question": test.question, "category": test.category}
             if retrieval_only:
                 docs = impl().fetch_context(test.question)
@@ -333,36 +374,15 @@ def run_batch(limit: int | None, retrieval_only: bool, label: str, split: str = 
             # False = some keyword never reached the model, so a wrong answer is a retrieval miss
             row["retrieval_complete"] = retrieval.keywords_found == retrieval.total_keywords
             rows.append(row)
-            print(f"[{index}/{len(tests)}] {test.category:<14} mrr={row['mrr']:.2f}"
+            write_results(path, rows, settings, metrics, None, len(tests), seconds + time.time() - start)
+            print(f"[{count}/{len(tests)}] {test.category:<14} mrr={row['mrr']:.2f}"
                   + ("" if retrieval_only else f" acc={row['accuracy']:.0f}"), flush=True)
     except (Exception, KeyboardInterrupt) as e:
         error = f"{type(e).__name__}: {str(e)[:300]}"
-        print(f"Stopped early after {len(rows)} tests -> {error}", file=sys.stderr)
+        print(f"Stopped early after {len(rows)} tests -> {error}\nRe-run with --resume to continue.", file=sys.stderr)
 
-    by_category = defaultdict(list)
-    for row in rows:
-        by_category[row["category"]].append(row)
-    summary = {
-        "label": label,
-        "impl": _impl_name,
-        "split": split,
-        "limit": limit,
-        "timestamp": datetime.now().isoformat(timespec="seconds"),
-        "tests": len(rows),
-        "planned_tests": len(tests),
-        "error": error,
-        "answer_model": None if retrieval_only else answer_model_name(),
-        "judge_model": None if retrieval_only else JUDGE_MODEL,
-        "seconds": round(time.time() - start, 1),
-        "overall": summarize(rows, metrics, retrieval_only),
-        "by_category": {
-            cat: summarize(rs, metrics, retrieval_only) for cat, rs in sorted(by_category.items())
-        },
-    }
-
-    RESULTS_DIR.mkdir(exist_ok=True)
-    path = RESULTS_DIR / f"{label}.json"
-    path.write_text(json.dumps({"summary": summary, "rows": rows}, indent=2), encoding="utf-8")
+    rows.sort(key=lambda row: row["index"])
+    summary = write_results(path, rows, settings, metrics, error, len(tests), seconds + time.time() - start)
     print(json.dumps(summary, indent=2))
     print(f"Saved {path}")
     return path
@@ -375,13 +395,14 @@ def main():
     parser.add_argument("--retrieval-only", action="store_true", help="batch: skip LLM answer + judge (free, fast)")
     parser.add_argument("--split", choices=SPLITS, default="all", help="batch: all 150, tune (100) or holdout (50)")
     parser.add_argument("--impl", choices=sorted(IMPLEMENTATIONS), default="basic", help="RAG implementation to evaluate")
+    parser.add_argument("--resume", action="store_true", help="batch: continue an interrupted run with the same --label")
     parser.add_argument("--label", default=None, help="batch: results file name (evaluation/results/<label>.json)")
     args = parser.parse_args()
     use_implementation(args.impl)
 
     if args.target == "all":
         label = args.label or datetime.now().strftime("run_%Y%m%d_%H%M%S")
-        run_batch(args.limit, args.retrieval_only, label, args.split)
+        run_batch(args.limit, args.retrieval_only, label, args.split, args.resume)
         return
 
     try:
