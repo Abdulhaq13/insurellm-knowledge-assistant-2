@@ -265,6 +265,24 @@ def _mean(values: list[float]) -> float:
     return round(sum(values) / len(values), 4) if values else 0.0
 
 
+PASS_ACCURACY = 4  # an answer "passes" with accuracy >= 4; pass_rate is the headline target
+
+
+def summarize(rows: list[dict], metrics: list[str], retrieval_only: bool) -> dict:
+    """Averages of the metrics, plus pass rate and a failure breakdown for answer runs."""
+    stats = {"tests": len(rows), **{m: _mean([r[m] for r in rows]) for m in metrics}}
+    stats["retrieval_complete_rate"] = round(
+        100 * sum(r["retrieval_complete"] for r in rows) / len(rows), 2) if rows else 0.0
+    if not retrieval_only:
+        failed = [r for r in rows if r["accuracy"] < PASS_ACCURACY]
+        stats["pass_rate"] = round(100 * (len(rows) - len(failed)) / len(rows), 2) if rows else 0.0
+        stats["failures"] = {
+            "retrieval_miss": sum(not r["retrieval_complete"] for r in failed),
+            "answer_mistake": sum(r["retrieval_complete"] for r in failed),
+        }
+    return stats
+
+
 def run_batch(limit: int | None, retrieval_only: bool, label: str) -> Path:
     """Evaluate many tests and save per-test rows plus overall and per-category averages to JSON."""
     tests = sample_tests(load_tests(), limit)
@@ -285,7 +303,10 @@ def run_batch(limit: int | None, retrieval_only: bool, label: str) -> Path:
                 row["answer"] = answer
                 judged = judge_answer(test, answer)
                 row.update(judged.model_dump(include={"accuracy", "completeness", "relevance", "feedback"}))
-            row.update(score_retrieval(test, docs).model_dump(include={"mrr", "ndcg", "keyword_coverage"}))
+            retrieval = score_retrieval(test, docs)
+            row.update(retrieval.model_dump(include={"mrr", "ndcg", "keyword_coverage"}))
+            # False = some keyword never reached the model, so a wrong answer is a retrieval miss
+            row["retrieval_complete"] = retrieval.keywords_found == retrieval.total_keywords
             rows.append(row)
             print(f"[{index}/{len(tests)}] {test.category:<14} mrr={row['mrr']:.2f}"
                   + ("" if retrieval_only else f" acc={row['accuracy']:.0f}"), flush=True)
@@ -306,10 +327,9 @@ def run_batch(limit: int | None, retrieval_only: bool, label: str) -> Path:
         "answer_model": None if retrieval_only else impl().MODEL,
         "judge_model": None if retrieval_only else JUDGE_MODEL,
         "seconds": round(time.time() - start, 1),
-        "overall": {m: _mean([r[m] for r in rows]) for m in metrics},
+        "overall": summarize(rows, metrics, retrieval_only),
         "by_category": {
-            cat: {"tests": len(rs), **{m: _mean([r[m] for r in rs]) for m in metrics}}
-            for cat, rs in sorted(by_category.items())
+            cat: summarize(rs, metrics, retrieval_only) for cat, rs in sorted(by_category.items())
         },
     }
 
