@@ -14,6 +14,7 @@ from litellm import completion
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential
 
+from evaluation.budget import Budget, BudgetExceeded
 from evaluation.test import TestQuestion, load_tests
 
 
@@ -39,6 +40,27 @@ def use_implementation(name: str):
 def impl():
     # Imported lazily so only the chosen implementation (and its models / DB) gets loaded
     return importlib.import_module(IMPLEMENTATIONS[_impl_name])
+
+
+def set_answer_model(model: str):
+    """Override the answer model of the chosen implementation (model constant only, no other change)."""
+    module = impl()
+    if _impl_name == "engine":
+        importlib.import_module("answer_engine.config").ANSWER_MODEL = model
+        importlib.import_module("answer_engine.generation").ANSWER_MODEL = model
+    else:
+        module.MODEL = model
+
+
+def install_budget(cap_usd: float, label: str) -> Budget:
+    """Track and cap paid-model spend for every LLM call the chosen implementation makes."""
+    impl()
+    if _impl_name == "engine":
+        importlib.import_module("answer_engine.generation")
+        importlib.import_module("answer_engine.retrieval")
+    budget = Budget(cap_usd, label)
+    budget.install((IMPLEMENTATIONS[_impl_name].split(".")[0],))
+    return budget
 
 
 def answer_model_name() -> str | None:
@@ -332,14 +354,16 @@ def write_results(path: Path, rows: list[dict], settings: dict, metrics: list[st
     return summary
 
 
-def run_batch(limit: int | None, retrieval_only: bool, label: str, split: str = "all", resume: bool = False) -> Path:
+def run_batch(limit: int | None, retrieval_only: bool, label: str, split: str = "all", resume: bool = False,
+              budget: Budget | None = None) -> Path:
     """Evaluate many tests and save per-test rows plus overall and per-category averages to JSON.
     The file is rewritten after every test; with resume=True, tests already in it are skipped."""
     tests = sample_tests(split_tests(split), limit)
     metrics = ["mrr", "ndcg", "keyword_coverage"]
     if not retrieval_only:
         metrics += ["accuracy", "completeness", "relevance"]
-    settings = {"label": label, "impl": _impl_name, "split": split, "limit": limit, "retrieval_only": retrieval_only}
+    settings = {"label": label, "impl": _impl_name, "split": split, "limit": limit, "retrieval_only": retrieval_only,
+                "answer_model": None if retrieval_only else answer_model_name()}
 
     RESULTS_DIR.mkdir(exist_ok=True)
     path = RESULTS_DIR / f"{label}.json"
@@ -361,6 +385,8 @@ def run_batch(limit: int | None, retrieval_only: bool, label: str, split: str = 
     start = time.time()
     try:
         for count, (test_index, test) in enumerate(todo, start=len(done) + 1):
+            if budget:
+                budget.check()
             row = {"index": test_index, "question": test.question, "category": test.category}
             if retrieval_only:
                 docs = impl().fetch_context(test.question)
@@ -376,13 +402,17 @@ def run_batch(limit: int | None, retrieval_only: bool, label: str, split: str = 
             rows.append(row)
             write_results(path, rows, settings, metrics, None, len(tests), seconds + time.time() - start)
             print(f"[{count}/{len(tests)}] {test.category:<14} mrr={row['mrr']:.2f}"
-                  + ("" if retrieval_only else f" acc={row['accuracy']:.0f}"), flush=True)
-    except (Exception, KeyboardInterrupt) as e:
+                  + ("" if retrieval_only else f" acc={row['accuracy']:.0f}")
+                  + (f" spent=${budget.total:.4f}" if budget else ""), flush=True)
+    except (Exception, KeyboardInterrupt, BudgetExceeded) as e:
         error = f"{type(e).__name__}: {str(e)[:300]}"
         print(f"Stopped early after {len(rows)} tests -> {error}\nRe-run with --resume to continue.", file=sys.stderr)
 
     rows.sort(key=lambda row: row["index"])
     summary = write_results(path, rows, settings, metrics, error, len(tests), seconds + time.time() - start)
+    if budget:
+        summary["openai_spend_usd"] = budget.data["by_label"].get(label, 0.0)
+        path.write_text(json.dumps({"summary": summary, "rows": rows}, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))
     print(f"Saved {path}")
     return path
@@ -396,13 +426,18 @@ def main():
     parser.add_argument("--split", choices=SPLITS, default="all", help="batch: all 150, tune (100) or holdout (50)")
     parser.add_argument("--impl", choices=sorted(IMPLEMENTATIONS), default="basic", help="RAG implementation to evaluate")
     parser.add_argument("--resume", action="store_true", help="batch: continue an interrupted run with the same --label")
+    parser.add_argument("--answer-model", help="override the pipeline's answer model, e.g. openai/gpt-4.1-mini")
+    parser.add_argument("--max-cost", type=float, help="batch: stop once total OpenAI spend (ledger) reaches this many USD")
     parser.add_argument("--label", default=None, help="batch: results file name (evaluation/results/<label>.json)")
     args = parser.parse_args()
     use_implementation(args.impl)
+    if args.answer_model:
+        set_answer_model(args.answer_model)
 
     if args.target == "all":
         label = args.label or datetime.now().strftime("run_%Y%m%d_%H%M%S")
-        run_batch(args.limit, args.retrieval_only, label, args.split, args.resume)
+        budget = install_budget(args.max_cost, label) if args.max_cost is not None else None
+        run_batch(args.limit, args.retrieval_only, label, args.split, args.resume, budget)
         return
 
     try:
