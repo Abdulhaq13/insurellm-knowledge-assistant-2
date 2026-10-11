@@ -5,21 +5,22 @@ from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_openai import OpenAIEmbeddings
 
-
-from dotenv import load_dotenv
-
-MODEL = "gpt-4.1-nano"
 
 DB_NAME = str(Path(__file__).parent.parent / "vector_db")
 KNOWLEDGE_BASE = str(Path(__file__).parent.parent / "knowledge-base")
 
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+# answer.py imports these, so ingest and retrieval always use the same model; changing them requires re-ingesting
+EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
+QUERY_PROMPT = "Represent this sentence for searching relevant passages: "
+CHUNK_SIZE = 1200
+CHUNK_OVERLAP = 200
 
-load_dotenv(override=True)
-
-# embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+embeddings = HuggingFaceEmbeddings(
+    model_name=EMBEDDING_MODEL,
+    encode_kwargs={"normalize_embeddings": True},
+    query_encode_kwargs={"normalize_embeddings": True, "prompt": QUERY_PROMPT},
+)
 
 
 def fetch_documents():
@@ -33,12 +34,13 @@ def fetch_documents():
         folder_docs = loader.load()
         for doc in folder_docs:
             doc.metadata["doc_type"] = doc_type
+            doc.metadata["source"] = Path(doc.metadata["source"]).relative_to(KNOWLEDGE_BASE).as_posix()
             documents.append(doc)
     return documents
 
 
 def create_chunks(documents):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP)
     chunks = text_splitter.split_documents(documents)
     return chunks
 

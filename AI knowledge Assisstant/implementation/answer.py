@@ -1,11 +1,11 @@
-from pathlib import Path
 from typing import Iterator
 
 import litellm
 from litellm import completion
 from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
+
+from implementation.ingest import DB_NAME, embeddings
 
 from dotenv import load_dotenv
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
@@ -15,10 +15,8 @@ load_dotenv(override=True)
 litellm.suppress_debug_info = True
 
 MODEL = "groq/openai/gpt-oss-120b"
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-DB_NAME = str(Path(__file__).parent.parent / "vector_db")
 
-RETRIEVAL_K = 10
+RETRIEVAL_K = 6
 HISTORY_TURNS_FOR_RETRIEVAL = 2
 MAX_HISTORY_MESSAGES = 6
 
@@ -31,7 +29,6 @@ Context:
 {context}
 """
 
-embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
 vectorstore = Chroma(persist_directory=DB_NAME, embedding_function=embeddings)
 retriever = vectorstore.as_retriever(search_kwargs={"k": RETRIEVAL_K})
 
