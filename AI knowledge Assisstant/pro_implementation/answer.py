@@ -1,3 +1,4 @@
+import re
 from dotenv import load_dotenv
 from chromadb import PersistentClient
 from litellm import completion
@@ -5,6 +6,7 @@ from pydantic import BaseModel
 from pathlib import Path
 from functools import lru_cache
 from sentence_transformers import CrossEncoder
+from rank_bm25 import BM25Okapi
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 from pro_implementation.embeddings import embed_query
@@ -107,13 +109,36 @@ def rewrite_query(question, history=[]):
         return question
 
 
-def merge_chunks(chunks, reranked):
-    merged = chunks[:]
-    existing = [chunk.page_content for chunk in chunks]
-    for chunk in reranked:
-        if chunk.page_content not in existing:
-            merged.append(chunk)
+def merge_chunks(*chunk_lists):
+    """Concatenate chunk lists, dropping duplicates by content."""
+    merged, existing = [], set()
+    for chunks in chunk_lists:
+        for chunk in chunks:
+            if chunk.page_content not in existing:
+                existing.add(chunk.page_content)
+                merged.append(chunk)
     return merged
+
+
+def tokenize(text):
+    return re.findall(r"\w+", text.lower())
+
+
+@lru_cache(maxsize=1)
+def _bm25_index():
+    """BM25 keyword index over every chunk in the collection, built on first use."""
+    data = collection.get(include=["documents", "metadatas"])
+    chunks = [Result(page_content=d, metadata=m) for d, m in zip(data["documents"], data["metadatas"])]
+    return BM25Okapi([tokenize(c.page_content) for c in chunks]), chunks
+
+
+def keyword_search(question):
+    bm25, chunks = _bm25_index()
+    if not chunks:
+        return []
+    scores = bm25.get_scores(tokenize(question))
+    top = sorted(range(len(chunks)), key=lambda i: scores[i], reverse=True)[:RETRIEVAL_K]
+    return [chunks[i] for i in top if scores[i] > 0]
 
 
 def fetch_context_unranked(question):
@@ -127,10 +152,14 @@ def fetch_context_unranked(question):
 
 def fetch_context(original_question, history=[]):
     rewritten_question = rewrite_query(original_question, history)
-    chunks1 = fetch_context_unranked(original_question)
-    chunks2 = fetch_context_unranked(rewritten_question)
-    chunks = merge_chunks(chunks1, chunks2)
-    reranked = rerank(original_question, chunks)
+    chunks = merge_chunks(
+        fetch_context_unranked(original_question),
+        fetch_context_unranked(rewritten_question),
+        keyword_search(f"{original_question} {rewritten_question}"),
+    )
+    # A follow-up like "who leads it?" only makes sense to the reranker after the rewrite
+    rerank_query = rewritten_question if history else original_question
+    reranked = rerank(rerank_query, chunks)
     return reranked[:FINAL_K]
 
 
