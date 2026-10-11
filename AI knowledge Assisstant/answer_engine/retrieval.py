@@ -1,7 +1,8 @@
 """Find the chunks that answer a question. Owner: Terminal D.
 
 hybrid search (vector + BM25, CANDIDATES_K each) -> merge -> local cross-encoder rerank
--> FINAL_K chunks, plus extra chunks from other documents for "how many / which / list all" questions.
+-> FINAL_K chunks, plus extra chunks from other documents for "how many / which / list all" questions,
+plus a second search seeded by the top documents' titles for two-step questions.
 Optional: an LLM splits multi-part questions into sub-questions (off by default; costs Groq quota).
 """
 import json
@@ -22,6 +23,8 @@ litellm.suppress_debug_info = True
 DECOMPOSE = False  # LLM sub-question step; keep off unless the HELPER_MODEL quota is free
 LIST_EXTRA_K = FINAL_K  # extra chunks, each from a new document, for list-style questions (0 = off)
 HISTORY_TURNS = 1  # prior user turns added to the search query for follow-up questions
+SECOND_PASS_DOCS = 2  # top documents whose titles seed the second search
+SECOND_PASS_EXTRA_K = 3  # extra chunks added by the second search (0 = off)
 
 LIST_QUESTION = re.compile(
     r"\b(how many|which|list|all|every|each|total|average|combined|across|most|least|fewest|compare|both)\b",
@@ -37,7 +40,29 @@ def retrieve(index: ClientIndex, question: str, history: list[dict] = []) -> lis
     selected = ranked[:FINAL_K]
     if LIST_EXTRA_K and is_list_question(question):
         selected += diverse_extra(ranked[FINAL_K:], selected, LIST_EXTRA_K)
+    if SECOND_PASS_EXTRA_K:
+        selected += second_pass(index, query, ranked, selected)
     return selected
+
+
+def second_pass(index: ClientIndex, query: str, ranked: list[Chunk], selected: list[Chunk]) -> list[Chunk]:
+    """For two-step questions ("who leads the product that costs X?"): the first search finds the product's
+    document; searching again with that document's title + the question finds the fact about it, in the same
+    document or any other. Returns up to SECOND_PASS_EXTRA_K chunks not already selected."""
+    queries = [f"{title}\n{query}" for title in top_titles(ranked, SECOND_PASS_DOCS)]
+    candidates = merge(*[r for q in queries for r in (index.vector_search(q, CANDIDATES_K), index.keyword_search(q, CANDIDATES_K))])
+    have = {Reranker._key(c) for c in selected}
+    return Reranker(queries).rank([c for c in candidates if Reranker._key(c) not in have])[:SECOND_PASS_EXTRA_K]
+
+
+def top_titles(ranked: list[Chunk], n: int) -> list[str]:
+    """Titles of the first n distinct documents in rank order."""
+    titles: dict[str, str] = {}
+    for chunk in ranked:
+        if len(titles) >= n:
+            break
+        titles.setdefault(chunk.metadata["doc_id"], chunk.metadata.get("title") or chunk.metadata["doc_id"])
+    return list(titles.values())
 
 
 def search_query(question: str, history: list[dict]) -> str:
