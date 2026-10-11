@@ -32,6 +32,11 @@ you can compute it exactly from numbers given in the excerpts, and show the numb
 when the excerpts' numbers show it. If a number you would need is missing, say so instead of estimating.
 - If the question has several parts or steps (for example: first find which product costs X, then \
 find its launch date), work through each step using the excerpts, then give the final answer.
+- If the question asks whether something ever happened, or asks for all / every / each / which items, \
+check every entry, row and year in the excerpts and list every match, not only the first one you find.
+- If the question assumes something that the excerpts contradict (for example it asks why something \
+closed while the excerpts say it is still open), say that the excerpts contradict the assumption and \
+state what they say, with citations.
 - If excerpts disagree, prefer the most recent or most specific one, and mention the conflict briefly.
 - If the excerpts only partly answer the question, give what they support and say what is missing.
 - If the excerpts do not contain the answer, say you don't have that information in the available \
