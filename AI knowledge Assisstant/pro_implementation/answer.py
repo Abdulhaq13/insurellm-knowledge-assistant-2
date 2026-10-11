@@ -1,4 +1,5 @@
 import re
+from typing import Iterator
 from dotenv import load_dotenv
 from chromadb import PersistentClient
 from litellm import completion
@@ -31,6 +32,7 @@ collection = chroma.get_or_create_collection(collection_name)
 
 RETRIEVAL_K = 20
 FINAL_K = 10
+MAX_HISTORY_MESSAGES = 6
 
 SYSTEM_PROMPT = """
 You are a knowledgeable, friendly assistant representing the company Insurellm.
@@ -68,9 +70,11 @@ def make_rag_messages(question, history, chunks):
         f"Extract from {chunk.metadata['source']}:\n{chunk.page_content}" for chunk in chunks
     )
     system_prompt = SYSTEM_PROMPT.format(context=context)
+    # Keep only role/content (Gradio adds extra keys) and cap the history length
+    recent = [{"role": m["role"], "content": m["content"]} for m in history[-MAX_HISTORY_MESSAGES:]]
     return (
         [{"role": "system", "content": system_prompt}]
-        + history
+        + recent
         + [{"role": "user", "content": question}]
     )
 
@@ -163,11 +167,27 @@ def fetch_context(original_question, history=[]):
     return reranked[:FINAL_K]
 
 
+def llm(messages: list[dict], **kwargs):
+    return completion(model=MODEL, messages=messages, temperature=0, **kwargs)
+
+
 def answer_question(question: str, history: list[dict] = []) -> tuple[str, list]:
     """
     Answer a question using RAG and return the answer and the retrieved context
     """
     chunks = fetch_context(question, history)
     messages = make_rag_messages(question, history, chunks)
-    response = completion(model=MODEL, messages=messages)
+    response = llm(messages)
     return response.choices[0].message.content, chunks
+
+
+def stream_answer(question: str, history: list[dict] = []) -> Iterator[tuple[str, list]]:
+    """
+    Like answer_question, but yields (answer_so_far, docs) as tokens arrive.
+    """
+    chunks = fetch_context(question, history)
+    answer = ""
+    yield answer, chunks
+    for chunk in llm(make_rag_messages(question, history, chunks), stream=True):
+        answer += chunk.choices[0].delta.content or ""
+        yield answer, chunks
