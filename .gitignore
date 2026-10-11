@@ -10,6 +10,7 @@ __pycache__/
 # regenerable vector stores (rebuild with ingest.py)
 **/vector_db/
 **/preprocessed_db/
+**/engine_data/
 
 # other students' course submissions
 AI knowledge Assisstant/community-contributions/
