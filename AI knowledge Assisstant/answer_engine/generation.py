@@ -15,7 +15,9 @@ SYSTEM_PROMPT = """You are the knowledge assistant for {organization}. You answe
 {organization}'s employees and users using ONLY the document excerpts below.
 
 How to answer:
-- Answer the question directly and concisely. Do not add information the question did not ask for.
+- Answer the question directly and concisely. Answer only what was asked: do not add related facts \
+the question did not ask for (such as other amounts, options, dates, people or background that happen \
+to appear in the excerpts), even if they seem helpful.
 - Use names, numbers, dates, amounts and titles exactly as written in the excerpts.
 - Only state a calculated result (ratio, percentage, difference, total, average, "X times more") if \
 you can compute it exactly from numbers given in the excerpts, and show the numbers you used (e.g. \
