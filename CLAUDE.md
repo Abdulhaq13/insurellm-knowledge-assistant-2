@@ -11,51 +11,56 @@ A RAG (retrieval-augmented generation) assistant that answers questions from a s
 2. **Then a multi-client platform ("Option 1").** One codebase. Each client organisation gets its own assistant with a separate document collection, its own admins (who upload, replace and delete documents) and its own employees/users (who only ask questions). Clients must never see each other's data. The user is the platform owner.
 3. **All file types** (PDF, Word, Excel, text, Markdown). Cost and latency must stay low.
 
-There are two top-level folders:
+Top-level folders:
 
-- `AI knowledge Assisstant/` is the main development project: app, two RAG pipelines, evaluation harness, knowledge base and a local `.venv` (Python 3.13).
-- `Huggig face space/Space 1/` is the deployment copy for a Hugging Face Space. It is **stale**: it still has the original MiniLM / OpenAI code and the old `vector_db/`. It gets synced once the pipeline choice is final. Never copy `.env` into it.
+- `ai-knowledge-assistant/` is the project: the engine, the app, the evaluation harness, demo documents, legacy pipelines and a local `.venv` (Python 3.13).
+- `docs/` holds project documents (`solution-overview.md`).
 
-`AI knowledge Assisstant/community-contributions/` (~26 MB) holds other students' course submissions. It is not part of this app. Ignore it unless asked.
+Not deploying for now: the app runs locally (user decision 2026-10-11); the UI moves to a MERN stack later, calling the Python engine. The old Hugging Face copy and other students' course submissions were moved out of the repo to `D:\cllg\archive\old-huggingface-space\` and `D:\cllg\course-community-contributions\`.
 
 ## Cost rule
 
-**Answers in `answer_engine` use paid OpenAI `openai/gpt-4.1-mini`** (user decision 2026-10-11; the user has a small credit, about $2). That's roughly $0.001–0.0015 per question, or about $0.20–0.25 for a 150-question eval. Don't switch answers back to Groq without asking. **Everything else stays free:** the query-decomposition helper (`groq/openai/gpt-oss-20b`), the eval judge (`groq/qwen/qwen3.8-27b`), and the local embeddings, reranker and OCR. The legacy `implementation/` and `pro_implementation/` pipelines still answer with Groq `gpt-oss-120b`. Keep every model name in one constant (`answer_engine/config.py`) so model changes are one-line edits. Groq free limits are **per model, shared across the whole account**: about 8,000 tokens/minute and 1,000 requests/day. Two processes calling the same model slow each other down. Gemini's free tier is ~20 requests/day per model, which is unusable for evals.
+**Answers in `answer_engine` use paid OpenAI `openai/gpt-4.1-mini`** (user decision 2026-10-11; the user has a small credit, about $2). That's roughly $0.001–0.0015 per question, or about $0.20–0.25 for a 150-question eval. Don't switch answers back to Groq without asking. **Everything else stays free:** the query-decomposition helper (`groq/openai/gpt-oss-20b`), the eval judge (`groq/qwen/qwen3.8-27b`), and the local embeddings, reranker and OCR. The legacy `legacy/basic_rag/` and `legacy/pro_rag/` pipelines still answer with Groq `gpt-oss-120b`. Keep every model name in one constant (`answer_engine/config.py`) so model changes are one-line edits. Groq free limits are **per model, shared across the whole account**: about 8,000 tokens/minute and 1,000 requests/day. Two processes calling the same model slow each other down. Gemini's free tier is ~20 requests/day per model, which is unusable for evals.
 
-## Layout (inside `AI knowledge Assisstant/`)
+## Layout (inside `ai-knowledge-assistant/`)
 
 | Path | Role |
 |---|---|
 | `answer_engine/` | **The current engine**, which replaces both legacy pipelines: `loaders.py` (all file types plus OCR), `chunking.py`, `index.py` (one Chroma DB + BM25 per client under `engine_data/<client_id>/`), `retrieval.py` (hybrid search + cross-encoder rerank), `generation.py` (grounded answers with citations and a security rule against instructions inside documents), `pipeline.py` (public API and CLI), `config.py` (all models and settings). See `README.md`. |
-| `app_engine.py` | Gradio UI on `answer_engine`: a Chat tab, plus a Documents tab to upload, replace, list and delete files. |
-| `app.py` | Legacy Gradio chat UI. The chat streams on the left, and the retrieved chunks and their sources show on the right. Uses `implementation.answer.stream_answer`. |
-| `implementation/ingest.py` | Basic ingestion, and the **single source of truth** for `EMBEDDING_MODEL` (`BAAI/bge-small-en-v1.5`, 384-dim, with a query prompt), `CHUNK_SIZE`/`CHUNK_OVERLAP` (1200/200) and `DB_NAME`. Writes Chroma at `vector_db/` (~330 chunks). Stores `source` as a path relative to `knowledge-base/` (e.g. `products/Carllm.md`). |
-| `implementation/answer.py` | Basic RAG. Retrieves k=6 chunks for the current question plus the last 2 user turns (current question first), sends the last 6 history messages, and answers with `groq/openai/gpt-oss-120b` at temperature 0 via litellm, with tenacity retries on rate limits. Exposes `answer_question`, `stream_answer` and `fetch_context`. |
-| `pro_implementation/embeddings.py` | Local bge-small embeddings for the pro pipeline. |
-| `pro_implementation/ingest.py` | Pro ingestion. `groq/openai/gpt-oss-20b` splits each document into chunks (headline + summary + original text); long documents are sent in parts. The script is resumable through a cache in `preprocessed_db/chunk_cache/`. Writes Chroma `preprocessed_db/` (collection `docs`). |
-| `pro_implementation/answer.py` | Pro RAG: a history-aware query rewrite (gpt-oss-20b), then vector search on the original and the rewritten query plus BM25 keyword search, merged and reranked by a local cross-encoder (`ms-marco-MiniLM-L-6-v2`), keeping the top 10. Answers with gpt-oss-120b. Same interface as basic, including `stream_answer`; its docs are pydantic `Result` objects with `.page_content` and `.metadata`. |
+| `answer_engine/tests/` | pytest tests and `fixtures/`; `benchmarks/` holds the free retrieval benchmarks (`python -m answer_engine.tests.benchmarks.bench_retrieval`). |
+| `app.py` | Gradio UI on `answer_engine`: a Chat tab, plus a Documents tab to upload, replace, list and delete files. |
+| `legacy/basic_app.py` | Legacy Gradio chat UI on the basic pipeline (`python -m legacy.basic_app`). |
+| `legacy/basic_rag/ingest.py` | Basic ingestion, and the **single source of truth** for `EMBEDDING_MODEL` (`BAAI/bge-small-en-v1.5`, 384-dim, with a query prompt), `CHUNK_SIZE`/`CHUNK_OVERLAP` (1200/200) and `DB_NAME`. Writes Chroma at `legacy/vector_db/` (~330 chunks). Stores `source` as a path relative to `data/insurellm/` (e.g. `products/Carllm.md`). |
+| `legacy/basic_rag/answer.py` | Basic RAG. Retrieves k=6 chunks for the current question plus the last 2 user turns (current question first), sends the last 6 history messages, and answers with `groq/openai/gpt-oss-120b` at temperature 0 via litellm, with tenacity retries on rate limits. Exposes `answer_question`, `stream_answer` and `fetch_context`. |
+| `legacy/pro_rag/embeddings.py` | Local bge-small embeddings for the pro pipeline. |
+| `legacy/pro_rag/ingest.py` | Pro ingestion. `groq/openai/gpt-oss-20b` splits each document into chunks (headline + summary + original text); long documents are sent in parts. The script is resumable through a cache in `legacy/preprocessed_db/chunk_cache/`. Writes Chroma `legacy/preprocessed_db/` (collection `docs`). |
+| `legacy/pro_rag/answer.py` | Pro RAG: a history-aware query rewrite (gpt-oss-20b), then vector search on the original and the rewritten query plus BM25 keyword search, merged and reranked by a local cross-encoder (`ms-marco-MiniLM-L-6-v2`), keeping the top 10. Answers with gpt-oss-120b. Same interface as basic, including `stream_answer`; its docs are pydantic `Result` objects with `.page_content` and `.metadata`. |
 | `evaluation/tests.jsonl` | 150 test questions with keywords, a reference answer and a category (direct_fact, temporal, comparative, numerical, relationship, spanning, holistic). |
-| `evaluation/eval.py` | Retrieval metrics (MRR, nDCG, keyword coverage) and an LLM-as-judge answer score (accuracy, completeness, relevance, 1–5). The judge is `groq/qwen/qwen3.8-27b` at temperature 0, a different model family from the answerer. `--impl basic|pro` picks the pipeline. Batch runs save JSON to `evaluation/results/<label>.json`. |
-| `evaluation/results/` | Saved eval runs. `baseline_*` is the original setup and `after_bge_1200_k6_*` is the current basic pipeline. |
-| `evaluator.py` | Gradio dashboard for running the evals. |
-| `knowledge-base/{company,contracts,employees,products}/*.md` | Source documents (76 files, about 310K characters). The folder name becomes the `doc_type` metadata. |
-| `vector_db/`, `preprocessed_db/` | Generated Chroma DBs. They are gitignored; rebuild them with the ingest scripts. |
+| `evaluation/eval.py` | Retrieval metrics (MRR, nDCG, keyword coverage) and an LLM-as-judge answer score (accuracy, completeness, relevance, 1–5). The judge is `groq/qwen/qwen3.8-27b` at temperature 0, a different model family from the answerer. `--impl engine|basic|pro` picks the pipeline. Questions are loaded by `evaluation/question_set.py`. Batch runs save JSON to `evaluation/results/<label>.json`. |
+| `evaluation/results/` | Saved eval runs: current ones at the top level (`engine_*_gpt41mini`, `engine_tune_*`, `openai_spend.json`); early runs (`baseline_*`, `after_bge_*`, `new_*`, `engine_v1_*`) in `results/archive/`. |
+| `legacy/evaluator_dashboard.py` | Old Gradio dashboard for running the evals (`python -m legacy.evaluator_dashboard`). |
+| `data/insurellm/{company,contracts,employees,products}/*.md` | Source documents (76 files, about 310K characters). The folder name becomes the `doc_type` metadata. |
+| `engine_data/`, `legacy/vector_db/`, `legacy/preprocessed_db/` | Generated Chroma DBs. They are gitignored; rebuild them with the ingest commands. |
 
 ## Commands
 
-Run everything from `AI knowledge Assisstant/` so that the package imports resolve. This is Windows, and paths contain spaces, so quote them.
+Run everything from `ai-knowledge-assistant/` so that the package imports resolve (run scripts inside subfolders with `python -m`). This is Windows; the repo root path `D:\cllg\Project 1` contains a space, so quote it.
 
 ```powershell
-cd "D:\cllg\Project 1\AI knowledge Assisstant"
+cd "D:\cllg\Project 1\ai-knowledge-assistant"
 .\.venv\Scripts\Activate.ps1
 
-python implementation/ingest.py                    # rebuild vector_db/ (~20 s, free; needed after any KB or chunking change)
-python pro_implementation/ingest.py                # build preprocessed_db/ (~30-40 min on Groq free tier; resumable)
-python app.py                                      # chat UI
-python evaluator.py                                # evaluation dashboard
+python -m answer_engine.pipeline ingest data/insurellm   # index the demo documents into engine_data/ (free, ~1 min)
+python app.py                                      # chat UI (answer_engine)
+python -m pytest answer_engine/tests -q            # 111 tests
+python legacy/basic_rag/ingest.py                  # rebuild legacy/vector_db/ (~20 s, free)
+python legacy/pro_rag/ingest.py                    # build legacy/preprocessed_db/ (~30-40 min on Groq free tier; resumable)
+python -m legacy.basic_app                         # legacy chat UI
+python -m legacy.evaluator_dashboard               # legacy evaluation dashboard
 python -m evaluation.eval 0                        # evaluate one test row
 python -m evaluation.eval all --retrieval-only --label X        # all 150, retrieval only: local, free, ~2 s
 python -m evaluation.eval all --limit 30 --label X              # answers + judge on an evenly spaced subset (~4 min)
+python -m evaluation.eval all --impl engine --split tune --label X   # engine answers on the tune split (OpenAI cost)
 python -m evaluation.eval all --impl pro --label X              # same, against the pro pipeline
 ```
 
@@ -63,14 +68,14 @@ Dependencies are pinned in `requirements.txt` (exact versions tested in `.venv`)
 
 ## Environment
 
-Keys are read from `AI knowledge Assisstant/.env` via `python-dotenv`: `OPENAI_API_KEY` (answers in `answer_engine`), `GROQ_API_KEY` (helper, eval judge, legacy pipelines), `GEMINI_API_KEY` (unused), and `HF_TOKEN`. **Never print, commit, or copy `.env`.** On Hugging Face, set these as Space secrets.
+Keys are read from `ai-knowledge-assistant/.env` via `python-dotenv`: `OPENAI_API_KEY` (answers in `answer_engine`), `GROQ_API_KEY` (helper, eval judge, legacy pipelines), `GEMINI_API_KEY` (unused), and `HF_TOKEN`. **Never print, commit, or copy `.env`.** On Hugging Face, set these as Space secrets.
 
 ## Working rules
 
 - **Measure before and after every change.** Record a baseline first, then compare against it. Retrieval-only evals are free. Answer evals on the engine cost OpenAI credit (~$0.20–0.25 per 150 questions) plus Groq quota for the judge, so run them deliberately.
 - **Use 150 questions for answer-accuracy claims.** On 30, one question is worth 3.3%. Don't tune on the same questions you report: keep a held-out split.
 - **No document-specific tricks.** Every accuracy technique must work for any client's uploaded documents.
-- The embedding model at ingest and at query time **must match**. Change `EMBEDDING_MODEL` only in `implementation/ingest.py` (or `pro_implementation/embeddings.py`), then re-ingest.
+- The embedding model at ingest and at query time **must match**. Change `EMBEDDING_MODEL` only in `answer_engine/config.py` (legacy: `legacy/basic_rag/ingest.py`, `legacy/pro_rag/embeddings.py`), then re-ingest.
 - Gradio is pinned to 5.50 in the Space requirements. `app.py` relies on 5.x APIs (`type="messages"`, `show_copy_button`).
-- **Git:** the repo root is `D:\cllg\Project 1` and it's pushed to `github.com/Abdulhaq13/insurellm-knowledge-assistant-2`. Commit **each** logical change with a short, simple message and push. Stage files by explicit path, never `git add .`, because several Claude terminals may work in parallel, each owning different files. `.gitignore` excludes `.env`, `.venv`, the vector DBs, `community-contributions` and the Space folder.
+- **Git:** the repo root is `D:\cllg\Project 1` and it's pushed to `github.com/Abdulhaq13/insurellm-knowledge-assistant-2`. Commit **each** logical change with a short, simple message and push. Stage files by explicit path, never `git add .`, because several Claude terminals may work in parallel, each owning different files. `.gitignore` excludes `.env`, `.venv`, caches and the generated vector DBs.
 - Before making changes for the user, list the complete set of proposed changes and get approval.

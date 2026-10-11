@@ -11,9 +11,4 @@ __pycache__/
 **/vector_db/
 **/preprocessed_db/
 **/engine_data/
-
-# other students' course submissions
-AI knowledge Assisstant/community-contributions/
-
-# deployment copy (has its own git repo on Hugging Face)
-Huggig face space/
+.pytest_cache/
