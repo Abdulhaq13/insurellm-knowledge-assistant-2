@@ -18,15 +18,17 @@ There are two top-level folders:
 
 `AI knowledge Assisstant/community-contributions/` (~26 MB) holds other students' course submissions. It is not part of this app. Ignore it unless asked.
 
-## Cost rule: free tier first
+## Cost rule
 
-Use only free models until the product is final and has real users: Groq free tier for LLMs, plus local sentence-transformers / cross-encoder models. Keep every model name in one constant so moving to paid models later is a one-line change. Groq free limits are **per model, shared across the whole account**: about 8,000 tokens/minute and 1,000 requests/day. Two processes calling the same model slow each other down. Gemini's free tier is ~20 requests/day per model, which is unusable for evals.
+**Answers in `answer_engine` use paid OpenAI `openai/gpt-4.1-mini`** (user decision 2026-10-11; the user has a small credit, about $2). That's roughly $0.001–0.0015 per question, or about $0.20–0.25 for a 150-question eval. Don't switch answers back to Groq without asking. **Everything else stays free:** the query-decomposition helper (`groq/openai/gpt-oss-20b`), the eval judge (`groq/qwen/qwen3.8-27b`), and the local embeddings, reranker and OCR. The legacy `implementation/` and `pro_implementation/` pipelines still answer with Groq `gpt-oss-120b`. Keep every model name in one constant (`answer_engine/config.py`) so model changes are one-line edits. Groq free limits are **per model, shared across the whole account**: about 8,000 tokens/minute and 1,000 requests/day. Two processes calling the same model slow each other down. Gemini's free tier is ~20 requests/day per model, which is unusable for evals.
 
 ## Layout (inside `AI knowledge Assisstant/`)
 
 | Path | Role |
 |---|---|
-| `app.py` | Gradio chat UI. The chat streams on the left, and the retrieved chunks and their sources show on the right. Uses `implementation.answer.stream_answer`. |
+| `answer_engine/` | **The current engine**, which replaces both legacy pipelines: `loaders.py` (all file types plus OCR), `chunking.py`, `index.py` (one Chroma DB + BM25 per client under `engine_data/<client_id>/`), `retrieval.py` (hybrid search + cross-encoder rerank), `generation.py` (grounded answers with citations and a security rule against instructions inside documents), `pipeline.py` (public API and CLI), `config.py` (all models and settings). See `README.md`. |
+| `app_engine.py` | Gradio UI on `answer_engine`: a Chat tab, plus a Documents tab to upload, replace, list and delete files. |
+| `app.py` | Legacy Gradio chat UI. The chat streams on the left, and the retrieved chunks and their sources show on the right. Uses `implementation.answer.stream_answer`. |
 | `implementation/ingest.py` | Basic ingestion, and the **single source of truth** for `EMBEDDING_MODEL` (`BAAI/bge-small-en-v1.5`, 384-dim, with a query prompt), `CHUNK_SIZE`/`CHUNK_OVERLAP` (1200/200) and `DB_NAME`. Writes Chroma at `vector_db/` (~330 chunks). Stores `source` as a path relative to `knowledge-base/` (e.g. `products/Carllm.md`). |
 | `implementation/answer.py` | Basic RAG. Retrieves k=6 chunks for the current question plus the last 2 user turns (current question first), sends the last 6 history messages, and answers with `groq/openai/gpt-oss-120b` at temperature 0 via litellm, with tenacity retries on rate limits. Exposes `answer_question`, `stream_answer` and `fetch_context`. |
 | `pro_implementation/embeddings.py` | Local bge-small embeddings for the pro pipeline. |
@@ -61,11 +63,11 @@ Dependencies are pinned in `requirements.txt` (exact versions tested in `.venv`)
 
 ## Environment
 
-Keys are read from `AI knowledge Assisstant/.env` via `python-dotenv`: `GROQ_API_KEY` (used by everything now), `GEMINI_API_KEY`, `OPENAI_API_KEY` (not used while on the free tier), and `HF_TOKEN`. **Never print, commit, or copy `.env`.** On Hugging Face, set these as Space secrets.
+Keys are read from `AI knowledge Assisstant/.env` via `python-dotenv`: `OPENAI_API_KEY` (answers in `answer_engine`), `GROQ_API_KEY` (helper, eval judge, legacy pipelines), `GEMINI_API_KEY` (unused), and `HF_TOKEN`. **Never print, commit, or copy `.env`.** On Hugging Face, set these as Space secrets.
 
 ## Working rules
 
-- **Measure before and after every change.** Record a baseline first, then compare against it. Retrieval-only evals are free; answer evals use Groq quota.
+- **Measure before and after every change.** Record a baseline first, then compare against it. Retrieval-only evals are free. Answer evals on the engine cost OpenAI credit (~$0.20–0.25 per 150 questions) plus Groq quota for the judge, so run them deliberately.
 - **Use 150 questions for answer-accuracy claims.** On 30, one question is worth 3.3%. Don't tune on the same questions you report: keep a held-out split.
 - **No document-specific tricks.** Every accuracy technique must work for any client's uploaded documents.
 - The embedding model at ingest and at query time **must match**. Change `EMBEDDING_MODEL` only in `implementation/ingest.py` (or `pro_implementation/embeddings.py`), then re-ingest.
