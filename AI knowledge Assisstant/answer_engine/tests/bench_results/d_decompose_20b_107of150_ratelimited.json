@@ -1,0 +1,3796 @@
+{
+  "summary": {
+    "label": "d_decompose_20b",
+    "settings": {
+      "list_extra_k": 6,
+      "decompose": true,
+      "final_k": 6
+    },
+    "chunks": 545,
+    "tests": 150,
+    "avg_chunks_returned": 7.61,
+    "seconds_per_question": 12.121,
+    "all_returned": {
+      "overall": {
+        "mrr": 0.931,
+        "ndcg": 0.9151,
+        "keyword_coverage": 97.6444
+      },
+      "by_category": {
+        "comparative": {
+          "mrr": 0.9361,
+          "ndcg": 0.9142,
+          "keyword_coverage": 100.0
+        },
+        "direct_fact": {
+          "mrr": 0.9669,
+          "ndcg": 0.9492,
+          "keyword_coverage": 99.2857
+        },
+        "holistic": {
+          "mrr": 0.6984,
+          "ndcg": 0.738,
+          "keyword_coverage": 85.0
+        },
+        "numerical": {
+          "mrr": 1.0,
+          "ndcg": 0.9576,
+          "keyword_coverage": 100.0
+        },
+        "relationship": {
+          "mrr": 0.9667,
+          "ndcg": 0.9365,
+          "keyword_coverage": 100.0
+        },
+        "spanning": {
+          "mrr": 0.8103,
+          "ndcg": 0.8146,
+          "keyword_coverage": 92.3333
+        },
+        "temporal": {
+          "mrr": 0.9875,
+          "ndcg": 0.9534,
+          "keyword_coverage": 100.0
+        }
+      }
+    },
+    "first_6": {
+      "overall": {
+        "mrr": 0.9299,
+        "ndcg": 0.9158,
+        "keyword_coverage": 96.8444
+      },
+      "by_category": {
+        "comparative": {
+          "mrr": 0.9361,
+          "ndcg": 0.9142,
+          "keyword_coverage": 100.0
+        },
+        "direct_fact": {
+          "mrr": 0.9669,
+          "ndcg": 0.9517,
+          "keyword_coverage": 99.2857
+        },
+        "holistic": {
+          "mrr": 0.685,
+          "ndcg": 0.7005,
+          "keyword_coverage": 75.0
+        },
+        "numerical": {
+          "mrr": 1.0,
+          "ndcg": 0.98,
+          "keyword_coverage": 100.0
+        },
+        "relationship": {
+          "mrr": 0.9667,
+          "ndcg": 0.9446,
+          "keyword_coverage": 100.0
+        },
+        "spanning": {
+          "mrr": 0.8089,
+          "ndcg": 0.8147,
+          "keyword_coverage": 91.3333
+        },
+        "temporal": {
+          "mrr": 0.9875,
+          "ndcg": 0.9534,
+          "keyword_coverage": 100.0
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "question": "Who won the prestigious IIOTY award in 2023?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Maxine Thompson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Priya Sharma.md",
+        "employees/Marcus Johnson.md",
+        "employees/Alex Harper.md",
+        "employees/Michelle Rivera.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When was Insurellm founded?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "company/about.md",
+        "company/overview.md",
+        "employees/Avery Lancaster.md",
+        "company/careers.md",
+        "company/culture.md",
+        "employees/Oliver Spencer.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Who founded Insurellm?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "company/about.md",
+        "employees/Avery Lancaster.md",
+        "company/overview.md",
+        "company/careers.md",
+        "employees/Oliver Spencer.md",
+        "company/about.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many employees does Insurellm currently have?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/about.md",
+        "company/careers.md",
+        "employees/Amanda Foster.md",
+        "company/culture.md",
+        "company/overview.md",
+        "contracts/Contract with Advantage Medical Coverage for Healthllm.md",
+        "employees/Michael O'Brien.md",
+        "employees/Brandon Walker.md",
+        "contracts/Contract with Pinnacle Insurance Co. for Homellm.md",
+        "employees/Alex Harper.md",
+        "employees/Samantha Greene.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9642276612595898,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.987371476428394,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What was Insurellm's first product?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "company/about.md",
+        "company/overview.md",
+        "company/about.md",
+        "products/Claimllm.md",
+        "products/Homellm.md",
+        "company/overview.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9192732637447532,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9192732637447532,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many active contracts does Insurellm manage?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/overview.md",
+        "company/careers.md",
+        "company/about.md",
+        "company/culture.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with National Claims Network for Claimllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Rapid Claims Associates for Claimllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9916516243494735,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Where is Insurellm's headquarters located?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "company/overview.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "company/about.md",
+        "contracts/Contract with EverGuard Insurance for Rellm - AI-Powered Enterprise Reinsurance Solution.md",
+        "employees/Avery Lancaster.md",
+        "company/careers.md"
+      ],
+      "all": {
+        "mrr": 0.6666666666666666,
+        "ndcg": 0.7354643216198291,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.6666666666666666,
+        "ndcg": 0.7354643216198291,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many office locations does Insurellm maintain?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/about.md",
+        "company/overview.md",
+        "company/careers.md",
+        "company/about.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with EverGuard Insurance for Rellm - AI-Powered Enterprise Reinsurance Solution.md",
+        "contracts/Contract with GlobalRe Partners for Rellm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with National Claims Network for Claimllm.md",
+        "contracts/Contract with WellCare Insurance Co. for Healthllm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9624686165711522,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9719330772573624,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Insurellm's vision statement?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "company/culture.md",
+        "products/Claimllm.md",
+        "company/culture.md",
+        "company/overview.md",
+        "company/about.md",
+        "products/Healthllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9438515431945408,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9438515431945408,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many Bizllm contracts has Insurellm secured?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "company/about.md",
+        "company/overview.md",
+        "company/overview.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with National Claims Network for Claimllm.md",
+        "company/careers.md",
+        "products/Bizllm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "contracts/Contract with BrightWay Solutions for Markellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9384777856551358,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9593495917759277,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many Claimllm contracts does Insurellm have?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/about.md",
+        "company/overview.md",
+        "contracts/Contract with National Claims Network for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with Rapid Claims Associates for Claimllm.md",
+        "contracts/Contract with Premier Adjusters Inc. for Claimllm.md",
+        "products/Claimllm.md",
+        "company/culture.md",
+        "company/careers.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "contracts/Contract with BrightWay Solutions for Markellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9335522011641559,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9490668147943303,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many life insurance contracts has Lifellm secured?",
+      "category": "direct_fact",
+      "returned": 10,
+      "sources": [
+        "company/about.md",
+        "company/overview.md",
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Guardian Life Partners for Lifellm.md",
+        "products/Lifellm.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "employees/Avery Lancaster.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9955602885002781,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many health insurance contracts does Healthllm have?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/about.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with Advantage Medical Coverage for Healthllm.md",
+        "contracts/Contract with WellCare Insurance Co. for Healthllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "products/Healthllm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Guardian Life Partners for Lifellm.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "contracts/Contract with Greenstone Insurance for Homellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9729536912163784,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9914460409783439,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost of Carllm's Basic Tier?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "products/Carllm.md",
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with TechDrive Insurance for Carllm.md",
+        "contracts/Contract with Velocity Auto Solutions for Carllm.md",
+        "products/Homellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9438515431945408,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9438515431945408,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost of Carllm's Enterprise Tier?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "products/Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md",
+        "contracts/Contract with TechDrive Insurance for Carllm.md",
+        "products/Bizllm.md",
+        "products/Lifellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9755860788238042,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9755860788238042,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost of Homellm's Standard Tier?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "products/Homellm.md",
+        "contracts/Contract with GreenValley Insurance for Homellm.md",
+        "products/Healthllm.md",
+        "products/Lifellm.md",
+        "products/Claimllm.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9718043913038373,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9718043913038373,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost of Bizllm's Professional Tier?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "products/Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "products/Healthllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9942973606522293,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9942973606522293,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost of Claimllm's Core Tier?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "products/Claimllm.md",
+        "contracts/Contract with Rapid Claims Associates for Claimllm.md",
+        "products/Lifellm.md",
+        "contracts/Contract with National Claims Network for Claimllm.md",
+        "products/Healthllm.md",
+        "products/Bizllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9807369787819858,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9807369787819858,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost of Healthllm's Essential Tier?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "products/Healthllm.md",
+        "contracts/Contract with WellCare Insurance Co. for Healthllm.md",
+        "products/Lifellm.md",
+        "products/Claimllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "products/Homellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9714568043383812,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9714568043383812,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost of Lifellm's Starter Tier?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "products/Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Guardian Life Partners for Lifellm.md",
+        "products/Healthllm.md",
+        "products/Homellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost of Rellm's Basic Plan?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "products/Rellm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "products/Homellm.md",
+        "products/Lifellm.md",
+        "contracts/Contract with GlobalRe Partners for Rellm.md",
+        "products/Healthllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9362127688798525,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9362127688798525,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Maxine Thompson's current job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md"
+      ],
+      "all": {
+        "mrr": 0.75,
+        "ndcg": 0.8254604649035663,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.75,
+        "ndcg": 0.8254604649035663,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Maxine Thompson's current salary?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maya Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maya Thompson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9779147966158772,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9779147966158772,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Where is Maxine Thompson located?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Avery Lancaster's job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Avery Lancaster's current salary?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is James Wilson's job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/James Wilson.md",
+        "employees/James Wilson.md",
+        "employees/James Wilson.md",
+        "employees/James Wilson.md",
+        "employees/James Wilson.md",
+        "employees/Samuel Trenton.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9501149685115848,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9501149685115848,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is James Wilson's current salary?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/James Wilson.md",
+        "employees/James Wilson.md",
+        "employees/James Wilson.md",
+        "employees/James Wilson.md",
+        "employees/James Wilson.md",
+        "employees/Samuel Trenton.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Priya Sharma's job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Nina Patel.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Priya Sharma's current salary?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Nina Patel.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Robert Chen's job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Robert Chen.md",
+        "employees/Robert Chen.md",
+        "employees/Robert Chen.md",
+        "employees/Robert Chen.md",
+        "employees/Alex Chen.md",
+        "employees/Robert Chen.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.95466350716767,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.95466350716767,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Robert Chen's current salary?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Robert Chen.md",
+        "employees/Robert Chen.md",
+        "employees/Alex Chen.md",
+        "employees/Alex Chen.md",
+        "employees/Robert Chen.md",
+        "employees/Robert Chen.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9633791182357063,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9633791182357063,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Which product does Robert Chen serve as technical lead for?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "employees/Robert Chen.md",
+        "employees/Robert Chen.md",
+        "employees/Robert Chen.md",
+        "employees/Robert Chen.md",
+        "employees/Robert Chen.md",
+        "employees/Alex Chen.md",
+        "employees/Carlos Rodriguez.md",
+        "company/careers.md",
+        "employees/Rachel Martinez.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "employees/Alex Thomson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.989171398234967,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is David Kim's job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/David Kim.md",
+        "employees/David Kim.md",
+        "employees/David Kim.md",
+        "employees/David Kim.md",
+        "employees/David Kim.md",
+        "employees/James Wilson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9686751451782274,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9686751451782274,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Sarah Williams's job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Sarah Williams.md",
+        "employees/Sarah Williams.md",
+        "employees/Sarah Williams.md",
+        "employees/Sarah Williams.md",
+        "employees/Sarah Williams.md",
+        "employees/Samantha Greene.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9427299407857437,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9427299407857437,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Which product does Sarah Williams lead design for?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "employees/Sarah Williams.md",
+        "employees/Sarah Williams.md",
+        "employees/Sarah Williams.md",
+        "employees/Sarah Williams.md",
+        "employees/Michelle Rivera.md",
+        "employees/Sarah Williams.md",
+        "employees/Rachel Martinez.md",
+        "employees/Oliver Spencer.md",
+        "contracts/Contract with Pinnacle Insurance Co. for Homellm.md",
+        "company/careers.md",
+        "contracts/Contract with ConnectInsure Agency for Markellm.md",
+        "employees/Alex Harper.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9403287099669726,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9948031125935762,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Marcus Johnson's job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "contracts/Contract with Rapid Claims Associates for Claimllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9854643216198291,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9854643216198291,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Marcus Johnson's client retention rate?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "contracts/Contract with Rapid Claims Associates for Claimllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Lisa Anderson's job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Lisa Anderson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Rachel Martinez.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9427299407857437,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9427299407857437,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the size of Lisa Anderson's annual marketing budget?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Lisa Anderson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Emily Tran.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Emily Carter's job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Emily Carter.md",
+        "employees/Emily Carter.md",
+        "employees/Emily Carter.md",
+        "employees/Emily Tran.md",
+        "employees/Emily Carter.md",
+        "employees/Emily Carter.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9598603945740938,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9598603945740938,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the contract number for DriveSmart Insurance's Carllm agreement?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the duration of the DriveSmart Insurance Carllm contract?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with TechDrive Insurance for Carllm.md",
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9734512147629872,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9734512147629872,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the total contract value for DriveSmart Insurance's Carllm agreement?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with TechDrive Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "products/Carllm.md",
+        "contracts/Contract with Velocity Auto Solutions for Carllm.md",
+        "contracts/Contract with GreenValley Insurance for Homellm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9378229363633668,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9378229363633668,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many active auto policies does DriveSmart Insurance have?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "company/overview.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "company/about.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "contracts/Contract with TechDrive Insurance for Carllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9860267998428003,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the uptime SLA guarantee for DriveSmart Insurance?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md"
+      ],
+      "all": {
+        "mrr": 0.6666666666666666,
+        "ndcg": 0.7645592817331694,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.6666666666666666,
+        "ndcg": 0.7645592817331694,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Who signed the DriveSmart Insurance contract on behalf of Insurellm?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md"
+      ],
+      "all": {
+        "mrr": 0.6,
+        "ndcg": 0.7226056873873064,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.6,
+        "ndcg": 0.7226056873873064,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly payment for Greenstone Insurance's Homellm contract?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with GreenValley Insurance for Homellm.md",
+        "contracts/Contract with Greenstone Insurance for Homellm.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "contracts/Contract with Greenstone Insurance for Homellm.md",
+        "contracts/Contract with Pinnacle Insurance Co. for Homellm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md"
+      ],
+      "all": {
+        "mrr": 0.75,
+        "ndcg": 0.7888395831392726,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.75,
+        "ndcg": 0.7888395831392726,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What tier did Harmony Health Plans subscribe to for Healthllm?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost for Harmony Health Plans' Healthllm subscription?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "products/Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9378229363633668,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9378229363633668,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many covered members does Harmony Health Plans have?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Advantage Medical Coverage for Healthllm.md",
+        "contracts/Contract with WellCare Insurance Co. for Healthllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "products/Healthllm.md",
+        "company/culture.md",
+        "company/overview.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Who signed the Harmony Health Plans contract on behalf of Insurellm?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with WellCare Insurance Co. for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.8607117247675458,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.8607117247675458,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the contract number for Metropolitan Life Group's Lifellm agreement?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the total contract value for Metropolitan Life Group's Lifellm agreement?",
+      "category": "direct_fact",
+      "returned": 11,
+      "sources": [
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Guardian Life Partners for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "products/Lifellm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md",
+        "contracts/Contract with WellCare Insurance Co. for Healthllm.md",
+        "products/Healthllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9719330772573624,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9719330772573624,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many active policies does Metropolitan Life Group manage?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "contracts/Contract with Guardian Life Partners for Lifellm.md",
+        "company/overview.md",
+        "products/Lifellm.md",
+        "company/about.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Who signed the Metropolitan Life Group contract on behalf of the client?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What tier did FastTrack Insurance Services subscribe to for Claimllm?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "products/Claimllm.md",
+        "contracts/Contract with Premier Adjusters Inc. for Claimllm.md",
+        "contracts/Contract with Rapid Claims Associates for Claimllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9779147966158772,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9779147966158772,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly payment for FastTrack Insurance Services' Claimllm contract?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with Rapid Claims Associates for Claimllm.md",
+        "contracts/Contract with National Claims Network for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9633791182357063,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9633791182357063,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the duration of the FastTrack Insurance Services contract?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md"
+      ],
+      "all": {
+        "mrr": 0.5,
+        "ndcg": 0.49480311259357623,
+        "keyword_coverage": 50.0
+      },
+      "first_k": {
+        "mrr": 0.5,
+        "ndcg": 0.49480311259357623,
+        "keyword_coverage": 50.0
+      }
+    },
+    {
+      "question": "Who signed the FastTrack Insurance Services contract on behalf of Insurellm?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "company/about.md"
+      ],
+      "all": {
+        "mrr": 0.75,
+        "ndcg": 0.7991988685303134,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.75,
+        "ndcg": 0.7991988685303134,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What tier did Atlantic Risk Solutions subscribe to for Bizllm?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9719330772573624,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9719330772573624,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost for Atlantic Risk Solutions' Bizllm subscription?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "products/Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.91982811014801,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.91982811014801,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many user licenses are included in Atlantic Risk Solutions' contract?",
+      "category": "direct_fact",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Guardian Life Partners for Lifellm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "contracts/Contract with GlobalRe Partners for Rellm.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "contracts/Contract with Velocity Auto Solutions for Carllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Who signed the Atlantic Risk Solutions contract on behalf of Insurellm?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with GlobalRe Partners for Rellm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.987371476428394,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.987371476428394,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly fee for Belvedere Insurance's Markellm listing?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Belvedere Insurance for Markellm.md",
+        "products/Markellm.md",
+        "contracts/Contract with Belvedere Insurance for Markellm.md",
+        "contracts/Contract with GreenField Holdings for Markellm.md",
+        "contracts/Contract with BrightWay Solutions for Markellm.md",
+        "contracts/Contract with ConnectInsure Agency for Markellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9354759946054368,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9354759946054368,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When did Maxine Thompson join Insurellm?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "employees/Maya Thompson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When did James Wilson join Insurellm?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "employees/James Wilson.md",
+        "employees/James Wilson.md",
+        "employees/Alex Harper.md",
+        "employees/Samuel Trenton.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "employees/Avery Lancaster.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9823008098419915,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9823008098419915,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When did Insurellm reach its peak of 200 employees?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "company/about.md",
+        "company/careers.md",
+        "company/overview.md",
+        "company/culture.md",
+        "employees/Amanda Foster.md",
+        "employees/Avery Lancaster.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9441753425932892,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9441753425932892,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When did Insurellm undergo strategic restructuring?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "company/about.md",
+        "company/culture.md",
+        "company/about.md",
+        "employees/Alex Harper.md",
+        "employees/Oliver Spencer.md",
+        "company/overview.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When is Carllm's telematics-based pricing feature scheduled to launch?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "products/Carllm.md",
+        "products/Carllm.md",
+        "contracts/Contract with Velocity Auto Solutions for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "products/Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9463768953850228,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9463768953850228,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When is Homellm version 2.0 scheduled for release?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "products/Homellm.md",
+        "products/Lifellm.md",
+        "products/Healthllm.md",
+        "products/Rellm.md",
+        "products/Bizllm.md",
+        "products/Claimllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9355392720001685,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9355392720001685,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When is Bizllm version 1.0 scheduled to launch?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "products/Bizllm.md",
+        "products/Homellm.md",
+        "products/Healthllm.md",
+        "products/Lifellm.md",
+        "products/Claimllm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.8543849724608359,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.8543849724608359,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When is Claimllm version 1.0 scheduled to launch?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "products/Claimllm.md",
+        "products/Healthllm.md",
+        "products/Homellm.md",
+        "products/Lifellm.md",
+        "products/Bizllm.md",
+        "contracts/Contract with National Claims Network for Claimllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9157773147918112,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9157773147918112,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When is Lifellm version 1.0 scheduled to launch?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "products/Lifellm.md",
+        "products/Healthllm.md",
+        "products/Homellm.md",
+        "products/Bizllm.md",
+        "products/Claimllm.md",
+        "products/Rellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9386076576690247,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9386076576690247,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When is Healthllm version 1.0 scheduled to launch?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "products/Healthllm.md",
+        "products/Lifellm.md",
+        "products/Homellm.md",
+        "products/Bizllm.md",
+        "products/Claimllm.md",
+        "products/Rellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9427299407857437,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9427299407857437,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When was the DriveSmart Insurance contract for Carllm signed?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with TechDrive Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9719330772573624,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9719330772573624,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When was the Harmony Health Plans Healthllm contract effective?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9598603945740938,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9598603945740938,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When was the Metropolitan Life Group Lifellm contract signed?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9948031125935762,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9948031125935762,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When was the FastTrack Insurance Services Claimllm contract signed?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with Rapid Claims Associates for Claimllm.md",
+        "contracts/Contract with National Claims Network for Claimllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When was the Atlantic Risk Solutions Bizllm contract effective?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9472318710024877,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9472318710024877,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How much did Priya Sharma's recommendation engine increase conversion by for Marketllm?",
+      "category": "comparative",
+      "returned": 6,
+      "sources": [
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Priya Sharma.md",
+        "employees/Kevin Zhang.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9438515431945408,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9438515431945408,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "By what percentage did David Kim reduce deployment time with CI/CD pipelines?",
+      "category": "comparative",
+      "returned": 6,
+      "sources": [
+        "employees/David Kim.md",
+        "employees/David Kim.md",
+        "employees/Maya Thompson.md",
+        "employees/David Kim.md",
+        "employees/David Kim.md",
+        "company/careers.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.970553062154503,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.970553062154503,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "By what percentage did Sarah Williams improve user satisfaction scores?",
+      "category": "comparative",
+      "returned": 6,
+      "sources": [
+        "employees/Sarah Williams.md",
+        "employees/Sarah Williams.md",
+        "employees/Michelle Rivera.md",
+        "employees/Sarah Williams.md",
+        "employees/Brandon Walker.md",
+        "employees/Marcus Johnson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9837339917445846,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9837339917445846,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "By what percentage has Lisa Anderson increased qualified leads since 2021?",
+      "category": "comparative",
+      "returned": 6,
+      "sources": [
+        "employees/Lisa Anderson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Emily Tran.md",
+        "employees/Alex Thomson.md",
+        "employees/Alex Harper.md",
+        "employees/Lisa Anderson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.966260545977412,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.966260545977412,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "By what percentage did Emily Carter exceed her annual sales target in 2022?",
+      "category": "comparative",
+      "returned": 6,
+      "sources": [
+        "employees/Emily Carter.md",
+        "employees/Emily Carter.md",
+        "employees/Emily Carter.md",
+        "employees/Emily Tran.md",
+        "employees/Emily Tran.md",
+        "employees/Alex Thomson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9438515431945408,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9438515431945408,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the performance-based pricing for Belvedere Insurance's Markellm contract?",
+      "category": "comparative",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Belvedere Insurance for Markellm.md",
+        "products/Markellm.md",
+        "contracts/Contract with Belvedere Insurance for Markellm.md",
+        "contracts/Contract with GreenField Holdings for Markellm.md",
+        "contracts/Contract with ConnectInsure Agency for Markellm.md",
+        "contracts/Contract with ConnectInsure Agency for Markellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.937775191189971,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.937775191189971,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost for Stellar Insurance Co.'s Rellm subscription?",
+      "category": "comparative",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "products/Rellm.md",
+        "contracts/Contract with GlobalRe Partners for Rellm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9240719792888539,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9240719792888539,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What are Insurellm's four core values?",
+      "category": "comparative",
+      "returned": 6,
+      "sources": [
+        "company/culture.md",
+        "company/culture.md",
+        "company/culture.md",
+        "company/culture.md",
+        "company/careers.md",
+        "company/overview.md"
+      ],
+      "all": {
+        "mrr": 0.3611111111111111,
+        "ndcg": 0.5563625548325835,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.3611111111111111,
+        "ndcg": 0.5563625548325835,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What award did Alex Harper win in 2022?",
+      "category": "comparative",
+      "returned": 6,
+      "sources": [
+        "employees/Alex Harper.md",
+        "employees/Alex Harper.md",
+        "employees/Alex Harper.md",
+        "employees/Alex Harper.md",
+        "employees/Alex Chen.md",
+        "employees/Alex Thomson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When was the Stellar Insurance Co. Rellm contract effective?",
+      "category": "comparative",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with EverGuard Insurance for Rellm - AI-Powered Enterprise Reinsurance Solution.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9157773147918112,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9157773147918112,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many claims does FastTrack Insurance Services project for year 1?",
+      "category": "numerical",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with Rapid Claims Associates for Claimllm.md",
+        "products/Claimllm.md",
+        "contracts/Contract with National Claims Network for Claimllm.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "employees/Oliver Spencer.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Pinnacle Insurance Co. for Homellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How much annual revenue does Marcus Johnson's portfolio generate?",
+      "category": "numerical",
+      "returned": 6,
+      "sources": [
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "contracts/Contract with Rapid Claims Associates for Claimllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What percentage of quota did Jennifer Adams achieve in 2023?",
+      "category": "numerical",
+      "returned": 6,
+      "sources": [
+        "employees/Jennifer Adams.md",
+        "employees/Jennifer Adams.md",
+        "employees/Michael O'Brien.md",
+        "employees/Jennifer Adams.md",
+        "employees/Jennifer Adams.md",
+        "employees/Jordan Blake.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9779147966158772,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9779147966158772,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many products does Insurellm offer?",
+      "category": "numerical",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/about.md",
+        "company/overview.md",
+        "company/about.md",
+        "company/culture.md",
+        "company/overview.md",
+        "company/careers.md",
+        "products/Homellm.md",
+        "products/Carllm.md",
+        "contracts/Contract with National Claims Network for Claimllm.md",
+        "products/Lifellm.md",
+        "contracts/Contract with GreenValley Insurance for Homellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.8789272315193377,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9837339917445846,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost of Carllm's Professional Tier?",
+      "category": "numerical",
+      "returned": 6,
+      "sources": [
+        "products/Carllm.md",
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md",
+        "contracts/Contract with TechDrive Insurance for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "products/Bizllm.md",
+        "products/Healthllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.991580984285596,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.991580984285596,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What are the core insurance portals offered by Insurellm?",
+      "category": "relationship",
+      "returned": 6,
+      "sources": [
+        "company/overview.md",
+        "company/about.md",
+        "products/Claimllm.md",
+        "products/Lifellm.md",
+        "company/overview.md",
+        "products/Bizllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What are the marketplace and infrastructure products offered by Insurellm?",
+      "category": "relationship",
+      "returned": 6,
+      "sources": [
+        "company/overview.md",
+        "company/about.md",
+        "products/Carllm.md",
+        "company/overview.md",
+        "employees/David Kim.md",
+        "company/about.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.966260545977412,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.966260545977412,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Which product does Jessica Liu develop for?",
+      "category": "relationship",
+      "returned": 12,
+      "sources": [
+        "employees/Jessica Liu.md",
+        "employees/Jessica Liu.md",
+        "employees/Jessica Liu.md",
+        "employees/Jessica Liu.md",
+        "employees/Jessica Liu.md",
+        "employees/Kevin Zhang.md",
+        "employees/Rachel Martinez.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "employees/Avery Lancaster.md",
+        "employees/Michelle Rivera.md",
+        "company/careers.md",
+        "employees/Sarah Williams.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.8865807953426255,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9157773147918112,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Tyler Brooks's job title?",
+      "category": "relationship",
+      "returned": 6,
+      "sources": [
+        "employees/Tyler Brooks.md",
+        "employees/Tyler Brooks.md",
+        "employees/Tyler Brooks.md",
+        "employees/Tyler Brooks.md",
+        "employees/Tyler Brooks.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9598603945740938,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9598603945740938,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Which product does Tyler Brooks work on?",
+      "category": "relationship",
+      "returned": 12,
+      "sources": [
+        "employees/Tyler Brooks.md",
+        "employees/Tyler Brooks.md",
+        "employees/Tyler Brooks.md",
+        "employees/Tyler Brooks.md",
+        "employees/Tyler Brooks.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "products/Carllm.md",
+        "company/careers.md",
+        "employees/Brandon Walker.md",
+        "employees/Priya Sharma.md",
+        "contracts/Contract with Greenstone Insurance for Homellm.md",
+        "employees/James Wilson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.8964327114982721,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9157773147918112,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What product does the IIOTY award winner work on?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "employees/Maxine Thompson.md",
+        "employees/Kevin Zhang.md",
+        "employees/Rachel Martinez.md",
+        "employees/Maxine Thompson.md",
+        "employees/Marcus Johnson.md",
+        "employees/Priya Sharma.md"
+      ],
+      "all": {
+        "mrr": 0.8125,
+        "ndcg": 0.7655806260218853,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.8125,
+        "ndcg": 0.7655806260218853,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Who is the technical lead for the product that costs $10,000/month for Standard Tier?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "products/Homellm.md",
+        "products/Healthllm.md",
+        "products/Carllm.md",
+        "products/Claimllm.md",
+        "products/Rellm.md",
+        "products/Bizllm.md"
+      ],
+      "all": {
+        "mrr": 0.5,
+        "ndcg": 0.4625862263836886,
+        "keyword_coverage": 50.0
+      },
+      "first_k": {
+        "mrr": 0.5,
+        "ndcg": 0.4625862263836886,
+        "keyword_coverage": 50.0
+      }
+    },
+    {
+      "question": "What is the salary of the CTO who joined in January 2017?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "employees/James Wilson.md",
+        "employees/Oliver Spencer.md",
+        "employees/Maxine Thompson.md",
+        "employees/Maxine Thompson.md",
+        "employees/Avery Lancaster.md",
+        "employees/Samuel Trenton.md"
+      ],
+      "all": {
+        "mrr": 0.8333333333333334,
+        "ndcg": 0.875,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.8333333333333334,
+        "ndcg": 0.875,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the current salary of the founder of Insurellm?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "employees/Avery Lancaster.md",
+        "company/about.md",
+        "company/overview.md",
+        "employees/Michael O'Brien.md",
+        "company/careers.md",
+        "employees/Oliver Spencer.md"
+      ],
+      "all": {
+        "mrr": 0.75,
+        "ndcg": 0.75,
+        "keyword_coverage": 75.0
+      },
+      "first_k": {
+        "mrr": 0.75,
+        "ndcg": 0.75,
+        "keyword_coverage": 75.0
+      }
+    },
+    {
+      "question": "Which product did the Senior Data Scientist build a recommendation engine for that increased conversion by 28%?",
+      "category": "spanning",
+      "returned": 12,
+      "sources": [
+        "employees/Priya Sharma.md",
+        "employees/Samuel Trenton.md",
+        "company/careers.md",
+        "employees/Samuel Trenton.md",
+        "employees/Samuel Trenton.md",
+        "employees/Maxine Thompson.md",
+        "employees/Alex Harper.md",
+        "employees/Rachel Martinez.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "employees/Alex Thomson.md",
+        "employees/Daniel Park.md",
+        "employees/Jordan Blake.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9516433990956823,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Which product does the UX Designer who improved user satisfaction by 35% lead design for?",
+      "category": "spanning",
+      "returned": 12,
+      "sources": [
+        "employees/Sarah Williams.md",
+        "employees/Sarah Williams.md",
+        "employees/Michelle Rivera.md",
+        "employees/Michelle Rivera.md",
+        "employees/Michelle Rivera.md",
+        "employees/Jessica Liu.md",
+        "employees/Alex Harper.md",
+        "employees/Rachel Martinez.md",
+        "company/careers.md",
+        "employees/Lisa Anderson.md",
+        "employees/Emily Carter.md",
+        "employees/Alex Thomson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the annual marketing budget managed by the Marketing Manager in Austin?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "employees/Lisa Anderson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Lisa Anderson.md",
+        "employees/Alex Thomson.md",
+        "company/careers.md",
+        "employees/Jordan Blake.md"
+      ],
+      "all": {
+        "mrr": 0.875,
+        "ndcg": 0.9454127743564695,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.875,
+        "ndcg": 0.9454127743564695,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Who signed the contract on behalf of Insurellm for the client that pays $18,000 per month for Carllm?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Belvedere Insurance for Markellm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with Pinnacle Insurance Co. for Homellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md"
+      ],
+      "all": {
+        "mrr": 0.6666666666666666,
+        "ndcg": 0.7718856545760127,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.6666666666666666,
+        "ndcg": 0.7718856545760127,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What tier did the client with 35 user licenses subscribe to for Bizllm?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "products/Bizllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9764720031914397,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9764720031914397,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many covered members does the client who subscribed to Healthllm Professional Tier for $15,000/month have?",
+      "category": "spanning",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with Advantage Medical Coverage for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "products/Healthllm.md",
+        "contracts/Contract with WellCare Insurance Co. for Healthllm.md",
+        "contracts/Contract with Advantage Medical Coverage for Healthllm.md",
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "products/Bizllm.md",
+        "products/Lifellm.md",
+        "products/Claimllm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md"
+      ],
+      "all": {
+        "mrr": 0.7,
+        "ndcg": 0.7753194445188305,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.7,
+        "ndcg": 0.7760496840878434,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Who signed the Metropolitan Life Group contract that totals $1,098,000?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md"
+      ],
+      "all": {
+        "mrr": 0.6,
+        "ndcg": 0.704743802857166,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.6,
+        "ndcg": 0.704743802857166,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the total contract value for the client paying $12,000 per month for Bizllm Professional Tier?",
+      "category": "spanning",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "products/Bizllm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Advantage Medical Coverage for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "products/Healthllm.md",
+        "contracts/Contract with National Claims Network for Claimllm.md",
+        "contracts/Contract with GlobalRe Partners for Rellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9544952433815779,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9544952433815779,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "By what percentage did the DevOps Engineer in New York reduce deployment time?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "employees/David Kim.md",
+        "employees/Oliver Spencer.md",
+        "employees/David Kim.md",
+        "employees/David Kim.md",
+        "company/careers.md",
+        "company/careers.md"
+      ],
+      "all": {
+        "mrr": 0.8333333333333334,
+        "ndcg": 0.8488481203960745,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.8333333333333334,
+        "ndcg": 0.8488481203960745,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the annual revenue generated by the portfolio managed by the Customer Success Manager in New York?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "employees/Marcus Johnson.md",
+        "employees/Marcus Johnson.md",
+        "company/careers.md",
+        "employees/Marcus Johnson.md",
+        "employees/Emily Carter.md",
+        "employees/Lisa Anderson.md"
+      ],
+      "all": {
+        "mrr": 0.875,
+        "ndcg": 0.9070905926489023,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.875,
+        "ndcg": 0.9070905926489023,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "By what percentage did the Account Executive in Austin exceed their annual sales target in 2022?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "employees/Emily Carter.md",
+        "employees/Alex Thomson.md",
+        "employees/Alex Harper.md",
+        "employees/Jordan Blake.md",
+        "company/careers.md",
+        "employees/Michael O'Brien.md"
+      ],
+      "all": {
+        "mrr": 0.8400000000000001,
+        "ndcg": 0.8752918064843389,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.8400000000000001,
+        "ndcg": 0.8752918064843389,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When is the telematics-based pricing feature scheduled to launch for the product that costs $1,000/month for Basic Tier?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "products/Carllm.md",
+        "products/Carllm.md",
+        "products/Homellm.md",
+        "products/Lifellm.md",
+        "contracts/Contract with Velocity Auto Solutions for Carllm.md",
+        "products/Healthllm.md"
+      ],
+      "all": {
+        "mrr": 0.875,
+        "ndcg": 0.8570442721580467,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.875,
+        "ndcg": 0.8570442721580467,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost for the Basic Listing Fee on the marketplace that was Insurellm's first product?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with GreenField Holdings for Markellm.md",
+        "products/Markellm.md",
+        "contracts/Contract with BrightWay Solutions for Markellm.md",
+        "contracts/Contract with ConnectInsure Agency for Markellm.md",
+        "products/Homellm.md",
+        "contracts/Contract with Belvedere Insurance for Markellm.md"
+      ],
+      "all": {
+        "mrr": 0.6666666666666666,
+        "ndcg": 0.6597374834581017,
+        "keyword_coverage": 66.66666666666666
+      },
+      "first_k": {
+        "mrr": 0.6666666666666666,
+        "ndcg": 0.6597374834581017,
+        "keyword_coverage": 66.66666666666666
+      }
+    },
+    {
+      "question": "How many core values does the company founded by Avery Lancaster have?",
+      "category": "spanning",
+      "returned": 12,
+      "sources": [
+        "company/about.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "employees/Avery Lancaster.md",
+        "company/culture.md",
+        "company/careers.md",
+        "company/overview.md",
+        "products/Carllm.md",
+        "employees/Jordan Blake.md",
+        "contracts/Contract with EverGuard Insurance for Rellm - AI-Powered Enterprise Reinsurance Solution.md"
+      ],
+      "all": {
+        "mrr": 0.6285714285714286,
+        "ndcg": 0.6608872822108415,
+        "keyword_coverage": 80.0
+      },
+      "first_k": {
+        "mrr": 0.6,
+        "ndcg": 0.6,
+        "keyword_coverage": 60.0
+      }
+    },
+    {
+      "question": "What tier of Healthllm costs $15,000 per month and includes Advanced Medication Management?",
+      "category": "spanning",
+      "returned": 6,
+      "sources": [
+        "products/Healthllm.md",
+        "products/Lifellm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "products/Claimllm.md",
+        "products/Homellm.md"
+      ],
+      "all": {
+        "mrr": 0.75,
+        "ndcg": 0.6651140165526952,
+        "keyword_coverage": 75.0
+      },
+      "first_k": {
+        "mrr": 0.75,
+        "ndcg": 0.6651140165526952,
+        "keyword_coverage": 75.0
+      }
+    },
+    {
+      "question": "How many active policies does the client who pays $28,000 per month for Lifellm manage?",
+      "category": "spanning",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "contracts/Contract with Guardian Life Partners for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "products/Lifellm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with GlobalRe Partners for Rellm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "company/overview.md",
+        "contracts/Contract with Apex Reinsurance for Rellm - AI-Powered Enterprise Reinsurance Solution.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.8851994379045685,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.8982524023687807,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Alex Chen's current job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Alex Chen.md",
+        "employees/Alex Chen.md",
+        "employees/Robert Chen.md",
+        "employees/Alex Chen.md",
+        "employees/Alex Chen.md",
+        "employees/Alex Chen.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9756156000313431,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9756156000313431,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Carlos Rodriguez's current salary?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Carlos Rodriguez.md",
+        "employees/Carlos Rodriguez.md",
+        "employees/Carlos Rodriguez.md",
+        "employees/Carlos Rodriguez.md",
+        "employees/Carlos Rodriguez.md",
+        "employees/Rachel Martinez.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost of the Bizllm Business Tier?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "products/Bizllm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9403604899509247,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9403604899509247,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is Nina Patel's job title?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "employees/Nina Patel.md",
+        "employees/Nina Patel.md",
+        "employees/Nina Patel.md",
+        "employees/Nina Patel.md",
+        "employees/Nina Patel.md",
+        "employees/Rachel Martinez.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the contract number for the GreenValley Insurance Homellm agreement?",
+      "category": "direct_fact",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with GreenValley Insurance for Homellm.md",
+        "contracts/Contract with GreenValley Insurance for Homellm.md",
+        "contracts/Contract with GreenValley Insurance for Homellm.md",
+        "contracts/Contract with GreenValley Insurance for Homellm.md",
+        "contracts/Contract with Greenstone Insurance for Homellm.md",
+        "contracts/Contract with Greenstone Insurance for Homellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When did Alex Chen join Insurellm?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "employees/Alex Chen.md",
+        "employees/Alex Thomson.md",
+        "employees/Alex Harper.md",
+        "employees/Alex Chen.md",
+        "employees/Robert Chen.md",
+        "employees/Alex Chen.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9192732637447532,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9192732637447532,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When was the GreenValley Insurance Homellm contract signed?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with GreenValley Insurance for Homellm.md",
+        "contracts/Contract with GreenValley Insurance for Homellm.md",
+        "contracts/Contract with GreenValley Insurance for Homellm.md",
+        "contracts/Contract with GreenValley Insurance for Homellm.md",
+        "contracts/Contract with Greenstone Insurance for Homellm.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When was the Summit Commercial Insurance Bizllm contract effective?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md"
+      ],
+      "all": {
+        "mrr": 0.75,
+        "ndcg": 0.8154648767857288,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.75,
+        "ndcg": 0.8154648767857288,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When was the Roadway Insurance Carllm contract effective?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md",
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md",
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Velocity Auto Solutions for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "When was the Evergreen Life Insurance Lifellm contract signed?",
+      "category": "temporal",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many employees did Insurellm have at its peak in 2020?",
+      "category": "numerical",
+      "returned": 12,
+      "sources": [
+        "company/about.md",
+        "company/careers.md",
+        "company/overview.md",
+        "employees/Amanda Foster.md",
+        "employees/Marcus Johnson.md",
+        "company/culture.md",
+        "employees/Avery Lancaster.md",
+        "employees/Samuel Trenton.md",
+        "employees/Samantha Greene.md",
+        "employees/Kevin Zhang.md",
+        "employees/Sarah Williams.md",
+        "contracts/Contract with Pinnacle Insurance Co. for Homellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9463497329948187,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9635895280135665,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the monthly cost for Apex Reinsurance's Rellm subscription?",
+      "category": "numerical",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Apex Reinsurance for Rellm - AI-Powered Enterprise Reinsurance Solution.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "products/Rellm.md",
+        "contracts/Contract with GlobalRe Partners for Rellm.md",
+        "contracts/Contract with EverGuard Insurance for Rellm - AI-Powered Enterprise Reinsurance Solution.md",
+        "contracts/Contract with Apex Reinsurance for Rellm - AI-Powered Enterprise Reinsurance Solution.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9072233557701552,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9072233557701552,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many active policies does Evergreen Life Insurance currently manage?",
+      "category": "numerical",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Guardian Life Partners for Lifellm.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "company/overview.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "products/Lifellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9756156000313431,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9756156000313431,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many user licenses are provided for onboarding training in the Summit Commercial Insurance contract?",
+      "category": "numerical",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Apex Reinsurance for Rellm - AI-Powered Enterprise Reinsurance Solution.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md",
+        "contracts/Contract with TechDrive Insurance for Carllm.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "contracts/Contract with GlobalRe Partners for Rellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.8988614447725133,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How much new business did Michael O'Brien generate over the past 3 years?",
+      "category": "numerical",
+      "returned": 6,
+      "sources": [
+        "employees/Michael O'Brien.md",
+        "employees/Michael O'Brien.md",
+        "employees/Michael O'Brien.md",
+        "employees/Michael O'Brien.md",
+        "employees/Michael O'Brien.md",
+        "employees/Marcus Johnson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Which product does Rachel Martinez lead product strategy for?",
+      "category": "relationship",
+      "returned": 12,
+      "sources": [
+        "employees/Rachel Martinez.md",
+        "employees/Rachel Martinez.md",
+        "employees/Rachel Martinez.md",
+        "employees/Rachel Martinez.md",
+        "employees/Rachel Martinez.md",
+        "employees/Amanda Foster.md",
+        "employees/Michelle Rivera.md",
+        "employees/James Wilson.md",
+        "employees/Avery Lancaster.md",
+        "company/careers.md",
+        "company/about.md",
+        "employees/Alex Thomson.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Which mobile app does Kevin Zhang lead iOS development for?",
+      "category": "relationship",
+      "returned": 12,
+      "sources": [
+        "employees/Kevin Zhang.md",
+        "employees/Kevin Zhang.md",
+        "employees/Kevin Zhang.md",
+        "employees/Kevin Zhang.md",
+        "employees/Kevin Zhang.md",
+        "company/careers.md",
+        "products/Carllm.md",
+        "products/Markellm.md",
+        "contracts/Contract with ConnectInsure Agency for Markellm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "employees/Alex Thomson.md",
+        "employees/Jessica Liu.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Which tier of Bizllm did Summit Commercial Insurance subscribe to?",
+      "category": "relationship",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "products/Bizllm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md",
+        "company/about.md",
+        "company/overview.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9669096301170905,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What award did Carlos Rodriguez win in 2023?",
+      "category": "relationship",
+      "returned": 6,
+      "sources": [
+        "employees/Carlos Rodriguez.md",
+        "employees/Carlos Rodriguez.md",
+        "employees/Carlos Rodriguez.md",
+        "employees/Alex Harper.md",
+        "employees/Maxine Thompson.md",
+        "employees/Rachel Martinez.md"
+      ],
+      "all": {
+        "mrr": 0.6666666666666666,
+        "ndcg": 0.75,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.6666666666666666,
+        "ndcg": 0.75,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Who signed the Summit Commercial Insurance contract on behalf of Insurellm?",
+      "category": "relationship",
+      "returned": 6,
+      "sources": [
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9386076576690247,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9386076576690247,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many employees at Insurellm have a current salary under $80,000?",
+      "category": "holistic",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/about.md",
+        "company/careers.md",
+        "employees/Amanda Foster.md",
+        "company/culture.md",
+        "company/overview.md",
+        "employees/Michael O'Brien.md",
+        "employees/Oliver Spencer.md",
+        "employees/Avery Lancaster.md",
+        "employees/Alex Chen.md",
+        "employees/Alex Thomson.md",
+        "employees/Tyler Brooks.md"
+      ],
+      "all": {
+        "mrr": 0.5625,
+        "ndcg": 0.6853328452006593,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.5,
+        "ndcg": 0.5,
+        "keyword_coverage": 50.0
+      }
+    },
+    {
+      "question": "What is the total contract value of all Healthllm contracts combined?",
+      "category": "holistic",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Advantage Medical Coverage for Healthllm.md",
+        "products/Healthllm.md",
+        "contracts/Contract with WellCare Insurance Co. for Healthllm.md",
+        "company/about.md",
+        "company/overview.md",
+        "products/Lifellm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md",
+        "products/Homellm.md"
+      ],
+      "all": {
+        "mrr": 0.75,
+        "ndcg": 0.8657791423640082,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.75,
+        "ndcg": 0.8506859432870328,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Which product line has the most active contracts according to the company overview?",
+      "category": "holistic",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/overview.md",
+        "company/careers.md",
+        "company/culture.md",
+        "company/about.md",
+        "company/about.md",
+        "employees/Alex Harper.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with BrightWay Solutions for Markellm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md"
+      ],
+      "all": {
+        "mrr": 0.6,
+        "ndcg": 0.7278025747937302,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.6,
+        "ndcg": 0.7278025747937302,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "How many total employees work at Insurellm across all locations?",
+      "category": "holistic",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/about.md",
+        "company/careers.md",
+        "company/overview.md",
+        "employees/Amanda Foster.md",
+        "company/culture.md",
+        "employees/James Wilson.md",
+        "products/Bizllm.md",
+        "employees/Brandon Walker.md",
+        "contracts/Contract with Pinnacle Insurance Co. for Homellm.md",
+        "employees/Samantha Greene.md",
+        "employees/Nina Patel.md"
+      ],
+      "all": {
+        "mrr": 0.5,
+        "ndcg": 0.47022559844499234,
+        "keyword_coverage": 50.0
+      },
+      "first_k": {
+        "mrr": 0.5,
+        "ndcg": 0.49144604097834393,
+        "keyword_coverage": 50.0
+      }
+    },
+    {
+      "question": "What is the average monthly subscription cost across all Carllm contracts?",
+      "category": "holistic",
+      "returned": 12,
+      "sources": [
+        "products/Carllm.md",
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with TechDrive Insurance for Carllm.md",
+        "contracts/Contract with Velocity Auto Solutions for Carllm.md",
+        "contracts/Contract with Roadway Insurance Inc. for Carllm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with Harmony Health Plans for Healthllm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with Premier Adjusters Inc. for Claimllm.md",
+        "products/Markellm.md",
+        "contracts/Contract with Guardian Life Partners for Lifellm.md"
+      ],
+      "all": {
+        "mrr": 0.5,
+        "ndcg": 0.5,
+        "keyword_coverage": 50.0
+      },
+      "first_k": {
+        "mrr": 0.5,
+        "ndcg": 0.5,
+        "keyword_coverage": 50.0
+      }
+    },
+    {
+      "question": "How many different insurance product lines does Insurellm offer in total?",
+      "category": "holistic",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/overview.md",
+        "company/about.md",
+        "company/overview.md",
+        "company/culture.md",
+        "company/about.md",
+        "company/careers.md",
+        "products/Bizllm.md",
+        "products/Homellm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "products/Lifellm.md",
+        "products/Carllm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9355392720001685,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 0.9355392720001685,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "Which product has the fewest active contracts according to the portfolio breakdown?",
+      "category": "holistic",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/overview.md",
+        "company/overview.md",
+        "company/about.md",
+        "company/culture.md",
+        "company/about.md",
+        "company/careers.md",
+        "contracts/Contract with GlobalRe Partners for Rellm.md",
+        "contracts/Contract with Atlantic Risk Solutions for Bizllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "employees/Alex Harper.md",
+        "contracts/Contract with Fortress Business Underwriters for Bizllm.md"
+      ],
+      "all": {
+        "mrr": 0.5,
+        "ndcg": 0.49666114994073085,
+        "keyword_coverage": 50.0
+      },
+      "first_k": {
+        "mrr": 0.5,
+        "ndcg": 0.5,
+        "keyword_coverage": 50.0
+      }
+    },
+    {
+      "question": "What is the total number of active contracts across all Insurellm products?",
+      "category": "holistic",
+      "returned": 12,
+      "sources": [
+        "company/overview.md",
+        "company/culture.md",
+        "company/overview.md",
+        "company/careers.md",
+        "company/about.md",
+        "company/about.md",
+        "contracts/Contract with SafeHaven Property Insurance for Homellm.md",
+        "contracts/Contract with Heritage Life Assurance for Lifellm.md",
+        "contracts/Contract with DriveSmart Insurance for Carllm.md",
+        "contracts/Contract with Evergreen Life Insurance for Lifellm.md",
+        "contracts/Contract with National Claims Network for Claimllm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md"
+      ],
+      "all": {
+        "mrr": 0.5714285714285714,
+        "ndcg": 0.741819561903214,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 0.5,
+        "ndcg": 0.5,
+        "keyword_coverage": 50.0
+      }
+    },
+    {
+      "question": "How many states does United Healthcare Alliance operate in according to their contract?",
+      "category": "holistic",
+      "returned": 11,
+      "sources": [
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "company/overview.md",
+        "contracts/Contract with BrightWay Solutions for Markellm.md",
+        "products/Rellm.md",
+        "products/Lifellm.md",
+        "company/culture.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 0.9567007962357772,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    },
+    {
+      "question": "What is the longest contract duration among all Insurellm contracts?",
+      "category": "holistic",
+      "returned": 12,
+      "sources": [
+        "contracts/Contract with National Claims Network for Claimllm.md",
+        "contracts/Contract with GlobalRe Partners for Rellm.md",
+        "contracts/Contract with United Healthcare Alliance for Healthllm.md",
+        "contracts/Contract with Continental Commercial Group for Bizllm.md",
+        "contracts/Contract with Metropolitan Life Group for Lifellm.md",
+        "contracts/Contract with Summit Commercial Insurance for Bizllm.md",
+        "contracts/Contract with BrightWay Solutions for Markellm.md",
+        "contracts/Contract with Belvedere Insurance for Markellm.md",
+        "contracts/Contract with Stellar Insurance Co. for Rellm.md",
+        "contracts/Contract with Rapid Claims Associates for Claimllm.md",
+        "contracts/Contract with FastTrack Insurance Services for Claimllm.md",
+        "contracts/Contract with GreenValley Insurance for Homellm.md"
+      ],
+      "all": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      },
+      "first_k": {
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "keyword_coverage": 100.0
+      }
+    }
+  ]
+}
