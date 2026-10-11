@@ -38,6 +38,17 @@ def _index(client_id: str):
     return ClientIndex(client_id)
 
 
+def warm_up(client_id: str = DEFAULT_CLIENT_ID) -> None:
+    """Load the index, keyword index and both local models now, so the first question isn't slow."""
+    from answer_engine.retrieval import cross_encoder
+
+    cross_encoder()
+    try:
+        fetch_context("warm up", client_id=client_id)
+    except Exception as error:  # an empty or broken index must not stop the app from starting
+        print(f"warm_up skipped: {type(error).__name__}: {error}")
+
+
 def organization_name(client_id: str) -> str:
     return CLIENT_NAMES.get(client_id, client_id)
 

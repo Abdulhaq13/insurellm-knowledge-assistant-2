@@ -14,6 +14,8 @@ load_dotenv(override=True)
 
 CLIENT_ID = DEFAULT_CLIENT_ID  # one client for now; the multi-client platform will choose this per login
 MAX_FILE_SIZE = "50mb"
+INPUT_PLACEHOLDER = f"Ask anything about {pipeline.organization_name(CLIENT_ID)}..."
+ANSWERING_PLACEHOLDER = "Answering… you can ask the next question when this answer is finished."
 DOCUMENT_COLUMNS = ["Document", "Title", "Type", "Chunks"]
 EMPTY_INDEX_HINT = (
     "*No documents indexed yet.* Upload files on the **Documents** tab, or index a whole folder with "
@@ -51,6 +53,8 @@ def format_sources(chunks, used: bool = True) -> str:
 
 
 def chat(history):
+    if not history or history[-1]["role"] != "user":  # empty submit: nothing new to answer
+        return
     question, prior = history[-1]["content"], history[:-1]
     history = history + [{"role": "assistant", "content": ""}]
     sources = None
@@ -68,9 +72,15 @@ def chat(history):
 
 
 def add_user_message(message, history):
+    """Moves the question into the chat and locks the box until the answer is done (unlock_input).
+    Without the lock, Enter is ignored while an answer streams and the next question gets glued to the old text."""
     if not message.strip():
-        return message, history
-    return "", history + [{"role": "user", "content": message}]
+        return gr.update(value=message), history
+    return gr.update(value="", interactive=False, placeholder=ANSWERING_PLACEHOLDER), history + [{"role": "user", "content": message}]
+
+
+def unlock_input():
+    return gr.update(interactive=True, placeholder=INPUT_PLACEHOLDER)
 
 
 # ---------- documents ----------
@@ -141,7 +151,7 @@ def main():
             with gr.Row():
                 with gr.Column(scale=1):
                     chatbot = gr.Chatbot(label="Conversation", height=600, type="messages", show_copy_button=True)
-                    message = gr.Textbox(placeholder=f"Ask anything about {organization}...", show_label=False)
+                    message = gr.Textbox(placeholder=INPUT_PLACEHOLDER, show_label=False)
                 with gr.Column(scale=1):
                     sources = gr.Markdown("*The sources used for each answer will appear here.*", container=True, height=600)
 
@@ -165,7 +175,10 @@ def main():
                     documents = gr.Dataframe(headers=DOCUMENT_COLUMNS, interactive=False, wrap=True)
 
         refresh_outputs = [documents, to_delete, empty_hint]
-        message.submit(add_user_message, [message, chatbot], [message, chatbot]).then(chat, chatbot, [chatbot, sources])
+        # always unlock the box afterwards, even if answering failed
+        message.submit(add_user_message, [message, chatbot], [message, chatbot]).then(
+            chat, chatbot, [chatbot, sources]
+        ).then(unlock_input, None, message)
         upload_button.click(upload_files, files, [status, files, *refresh_outputs])
         delete_button.click(
             delete_document,
@@ -175,6 +188,8 @@ def main():
         )
         ui.load(refresh_documents, None, refresh_outputs)
 
+    print("Loading search models...")
+    pipeline.warm_up(CLIENT_ID)
     ui.launch(inbrowser=True, max_file_size=MAX_FILE_SIZE)
 
 
