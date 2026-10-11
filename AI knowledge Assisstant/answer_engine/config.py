@@ -6,8 +6,8 @@ DEFAULT_CLIENT_ID = "insurellm"
 # Display names per client; replaced by a client table once the multi-client platform exists
 CLIENT_NAMES = {"insurellm": "Insurellm"}
 
-# Free tier now; switch to paid models here only once the product has real users
-ANSWER_MODEL = "groq/openai/gpt-oss-120b"
+# Answers use OpenAI (needs OPENAI_API_KEY in .env); the helper stays on the Groq free tier
+ANSWER_MODEL = "openai/gpt-4.1-mini"
 HELPER_MODEL = "groq/openai/gpt-oss-20b"  # query rewriting / decomposition
 
 EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"  # changing it requires re-ingesting every client
