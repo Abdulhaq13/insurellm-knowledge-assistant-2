@@ -3,6 +3,8 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 DATA_DIR = ROOT / "engine_data"  # per-client Chroma DBs and indexes (gitignored)
 DEFAULT_CLIENT_ID = "insurellm"
+# Display names per client; replaced by a client table once the multi-client platform exists
+CLIENT_NAMES = {"insurellm": "Insurellm"}
 
 # Free tier now; switch to paid models here only once the product has real users
 ANSWER_MODEL = "groq/openai/gpt-oss-120b"
@@ -17,3 +19,4 @@ CHUNK_OVERLAP = 200
 CANDIDATES_K = 20  # per search method, before reranking
 FINAL_K = 6  # chunks sent to the answer model
 MAX_HISTORY_MESSAGES = 6
+CITE_SOURCES = True  # answers cite excerpt numbers like [1]
