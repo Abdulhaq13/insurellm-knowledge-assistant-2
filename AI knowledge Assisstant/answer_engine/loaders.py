@@ -11,6 +11,10 @@ Title rule: the first heading, else the file's metadata title, else the file nam
 that opens with a top-level heading that has no text under it, directly followed by another
 heading of the same level (e.g. "# HR Record" then "# Alex Chen"), is treated as label + name:
 the title becomes "HR Record: Alex Chen".
+
+OCR (RapidOCR, local and free) reads images and the PDF pages that have no text layer; pages
+with a normal text layer are never OCR'd. Run `python -m answer_engine.loaders --prepare-ocr`
+during setup / the Hugging Face build so the first upload never waits for the OCR models.
 """
 import csv
 import hashlib
@@ -18,16 +22,22 @@ import io
 import re
 from collections import Counter
 from datetime import date, datetime, time
+from functools import lru_cache
 from pathlib import Path
 
 from answer_engine.schema import LoadedDocument, Section
 
-SUPPORTED_EXTENSIONS: set[str] = {".md", ".markdown", ".txt", ".pdf", ".docx", ".xlsx", ".csv", ".html", ".htm"}
+SUPPORTED_EXTENSIONS: set[str] = {
+    ".md", ".markdown", ".txt", ".pdf", ".docx", ".xlsx", ".csv", ".html", ".htm", ".png", ".jpg", ".jpeg",
+}
 TABLE_HEADER_EVERY = 30  # spreadsheet rows between repeated header rows
+OCR_DPI = 200  # resolution scanned PDF pages are rendered at before OCR
+OCR_MIN_SCORE = 0.5  # drop OCR guesses below this confidence
+OCR_MAX_STAMP_CHARS = 20  # a page with an image and less text than this (e.g. a page-number stamp) is OCR'd
 
 
-class ScannedPDFError(ValueError):
-    """A PDF with no text layer (scanned images). OCR is not supported yet."""
+class NoTextFoundError(ValueError):
+    """The file has no readable text, not even after OCR (blank scan, photo without words)."""
 
 
 def load_file(path: Path, doc_id: str) -> LoadedDocument:
@@ -36,7 +46,7 @@ def load_file(path: Path, doc_id: str) -> LoadedDocument:
     if ext not in SUPPORTED_EXTENSIONS:
         raise ValueError(f"Unsupported file type '{ext or path.name}'. Supported types: {', '.join(sorted(SUPPORTED_EXTENSIONS))}")
     raw = path.read_bytes()
-    file_type = {".markdown": "md", ".htm": "html"}.get(ext, ext[1:])
+    file_type = {".markdown": "md", ".htm": "html", ".jpeg": "jpg"}.get(ext, ext[1:])
     title, sections, metadata = _LOADERS[file_type](raw, path)
     return LoadedDocument(
         doc_id=doc_id,
@@ -333,7 +343,9 @@ def _load_pdf(raw: bytes, path: Path):
         raise ValueError(f"{path.name} is password-protected and cannot be read")
 
     pages = []  # (page text, {normalised line: (size, bold)})
-    for page in reader.pages:
+    ocr_pages = []
+    rendered = None  # pypdfium2 document, opened only if some page needs OCR
+    for number, page in enumerate(reader.pages, start=1):
         spans: dict[float, list] = {}
 
         def visit(text, cm, tm, font_dict, font_size, spans=spans):
@@ -345,6 +357,16 @@ def _load_pdf(raw: bytes, path: Path):
             spans.setdefault(y, []).append((text, font_size * scale, bool(_BOLD_FONT.search(font))))
 
         text = page.extract_text(visitor_text=visit) or ""
+        visible = len(re.sub(r"\s+", "", text))
+        if visible == 0 or (visible < OCR_MAX_STAMP_CHARS and _page_has_images(page)):
+            if rendered is None:
+                import pypdfium2
+
+                rendered = pypdfium2.PdfDocument(raw)
+            image = rendered[number - 1].render(scale=OCR_DPI / 72).to_pil()
+            pages.append((_ocr_image(image), {}))  # no font info, so OCR text is never a heading
+            ocr_pages.append(number)
+            continue
         styled = {}
         for parts in spans.values():
             key = _normalise("".join(t for t, _, _ in parts))
@@ -352,8 +374,10 @@ def _load_pdf(raw: bytes, path: Path):
                 styled[key] = (max(size for _, size, _ in parts), all(bold for t, _, bold in parts if t.strip()))
         pages.append((text, styled))
 
+    if rendered is not None:
+        rendered.close()
     if not any(text.strip() for text, _ in pages):
-        raise ScannedPDFError(f"{path.name} has no extractable text (probably a scanned PDF). OCR is not supported yet.")
+        raise NoTextFoundError(f"No readable text found in {path.name}, not even with OCR (blank or unreadable scan).")
 
     heading_levels, body_size = _pdf_heading_levels(pages)
     builder = _SectionBuilder()
@@ -371,7 +395,15 @@ def _load_pdf(raw: bytes, path: Path):
     if reader.metadata and reader.metadata.title:
         meta_title = str(reader.metadata.title).strip() or None
     title = builder.title if heading_levels else None
-    return title or meta_title, builder.finish(), {"pages": len(pages)}
+    return title or meta_title, builder.finish(), {"pages": len(pages), "ocr_pages": ocr_pages}
+
+
+def _page_has_images(page) -> bool:
+    try:
+        xobjects = page["/Resources"]["/XObject"]
+        return any(xobjects[name].get("/Subtype") == "/Image" for name in xobjects)
+    except Exception:
+        return False
 
 
 def _normalise(text: str) -> str:
@@ -416,6 +448,55 @@ def _looks_like_heading(line: str) -> bool:
     return 0 < len(line) <= 120 and len(line.split()) <= 15 and not line.endswith((".", ",", ";")) and any(c.isalpha() for c in line)
 
 
+# ---------- images and OCR ----------
+
+
+def prepare_ocr() -> None:
+    """Download any missing OCR model and load it, so the first scanned upload doesn't wait.
+    Call during setup or the Hugging Face build: python -m answer_engine.loaders --prepare-ocr"""
+    _ocr_engine()
+
+
+@lru_cache(maxsize=1)
+def _ocr_engine():
+    from rapidocr import RapidOCR
+
+    # creating the engine downloads missing models and verifies the bundled ones by checksum
+    return RapidOCR(params={"Global.log_level": "error"})
+
+
+def _load_image(raw: bytes, path: Path):
+    from PIL import Image, ImageOps
+
+    image = ImageOps.exif_transpose(Image.open(io.BytesIO(raw))).convert("RGB")
+    text = _ocr_image(image)
+    if not text:
+        raise NoTextFoundError(f"No readable text found in {path.name}.")
+    return None, [Section(heading_path=[], text=text)], {"ocr": True}
+
+
+def _ocr_image(image) -> str:
+    """OCR a PIL image; returns the text as lines in reading order (top to bottom, left to right)."""
+    import numpy as np
+
+    result = _ocr_engine()(np.asarray(image.convert("RGB")))
+    if result.txts is None:
+        return ""
+    words = []
+    for box, text, score in zip(result.boxes, result.txts, result.scores):
+        if score >= OCR_MIN_SCORE and text.strip():
+            ys, xs = [p[1] for p in box], [p[0] for p in box]
+            words.append((min(ys), max(ys), min(xs), text.strip()))
+    lines: list[list] = []
+    for top, bottom, left, text in sorted(words):
+        middle = (top + bottom) / 2
+        if lines and lines[-1][0] <= middle <= lines[-1][1]:  # vertically inside the current line
+            lines[-1][2].append((left, text))
+        else:
+            lines.append([top, bottom, [(left, text)]])
+    return "\n".join(" ".join(text for _, text in sorted(parts)) for _, _, parts in lines)
+
+
 # ---------- spreadsheets ----------
 
 
@@ -454,4 +535,18 @@ _LOADERS = {
     "pdf": _load_pdf,
     "xlsx": _load_xlsx,
     "csv": _load_csv,
+    "png": _load_image,
+    "jpg": _load_image,
 }
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Document loader utilities.")
+    parser.add_argument("--prepare-ocr", action="store_true", help="download (if missing) and load the OCR models")
+    if parser.parse_args().prepare_ocr:
+        prepare_ocr()
+        print("OCR models ready.")
+    else:
+        parser.print_help()
