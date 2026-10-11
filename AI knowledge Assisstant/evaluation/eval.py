@@ -22,12 +22,16 @@ litellm.suppress_debug_info = True
 
 JUDGE_MODEL = "groq/qwen/qwen3.8-27b"
 RESULTS_DIR = Path(__file__).parent / "results"
-IMPLEMENTATIONS = {"basic": "implementation.answer", "pro": "pro_implementation.answer"}
+IMPLEMENTATIONS = {
+    "basic": "implementation.answer",
+    "pro": "pro_implementation.answer",
+    "engine": "answer_engine.pipeline",
+}
 _impl_name = "basic"
 
 
 def use_implementation(name: str):
-    """Choose which RAG implementation (basic or pro) the evaluation runs against."""
+    """Choose which RAG implementation (basic, pro or engine) the evaluation runs against."""
     global _impl_name
     _impl_name = name
 
@@ -35,6 +39,13 @@ def use_implementation(name: str):
 def impl():
     # Imported lazily so only the chosen implementation (and its models / DB) gets loaded
     return importlib.import_module(IMPLEMENTATIONS[_impl_name])
+
+
+def answer_model_name() -> str | None:
+    # basic/pro expose MODEL; the answer engine keeps its models in answer_engine.config
+    if _impl_name == "engine":
+        return importlib.import_module("answer_engine.config").ANSWER_MODEL
+    return getattr(impl(), "MODEL", None)
 
 
 class RetrievalEval(BaseModel):
@@ -340,7 +351,7 @@ def run_batch(limit: int | None, retrieval_only: bool, label: str, split: str = 
         "tests": len(rows),
         "planned_tests": len(tests),
         "error": error,
-        "answer_model": None if retrieval_only else impl().MODEL,
+        "answer_model": None if retrieval_only else answer_model_name(),
         "judge_model": None if retrieval_only else JUDGE_MODEL,
         "seconds": round(time.time() - start, 1),
         "overall": summarize(rows, metrics, retrieval_only),
