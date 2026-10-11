@@ -1,4 +1,5 @@
 import argparse
+import importlib
 import json
 import math
 import sys
@@ -14,7 +15,6 @@ from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 from evaluation.test import TestQuestion, load_tests
-from implementation.answer import answer_question, fetch_context, MODEL as ANSWER_MODEL
 
 
 load_dotenv(override=True)
@@ -22,6 +22,19 @@ litellm.suppress_debug_info = True
 
 JUDGE_MODEL = "groq/qwen/qwen3.8-27b"
 RESULTS_DIR = Path(__file__).parent / "results"
+IMPLEMENTATIONS = {"basic": "implementation.answer", "pro": "pro_implementation.answer"}
+_impl_name = "basic"
+
+
+def use_implementation(name: str):
+    """Choose which RAG implementation (basic or pro) the evaluation runs against."""
+    global _impl_name
+    _impl_name = name
+
+
+def impl():
+    # Imported lazily so only the chosen implementation (and its models / DB) gets loaded
+    return importlib.import_module(IMPLEMENTATIONS[_impl_name])
 
 
 class RetrievalEval(BaseModel):
@@ -98,7 +111,7 @@ def evaluate_retrieval(test: TestQuestion, k: int = 10) -> RetrievalEval:
     Returns:
         RetrievalEval object with MRR, nDCG, and keyword coverage metrics
     """
-    return score_retrieval(test, fetch_context(test.question), k)
+    return score_retrieval(test, impl().fetch_context(test.question), k)
 
 
 def score_retrieval(test: TestQuestion, retrieved_docs: list, k: int = 10) -> RetrievalEval:
@@ -134,7 +147,7 @@ def evaluate_answer(test: TestQuestion) -> tuple[AnswerEval, str, list]:
     Returns:
         Tuple of (AnswerEval object, generated_answer string, retrieved_docs list)
     """
-    generated_answer, retrieved_docs = answer_question(test.question)
+    generated_answer, retrieved_docs = impl().answer_question(test.question)
     return judge_answer(test, generated_answer), generated_answer, retrieved_docs
 
 
@@ -203,7 +216,7 @@ def run_cli_evaluation(test_number: int):
 
     # Print test info
     print(f"\n{'=' * 80}")
-    print(f"Test #{test_number}")
+    print(f"Test #{test_number} ({_impl_name} implementation)")
     print(f"{'=' * 80}")
     print(f"Question: {test.question}")
     print(f"Keywords: {test.keywords}")
@@ -264,9 +277,9 @@ def run_batch(limit: int | None, retrieval_only: bool, label: str) -> Path:
         for index, test in enumerate(tests, start=1):
             row = {"question": test.question, "category": test.category}
             if retrieval_only:
-                docs = fetch_context(test.question)
+                docs = impl().fetch_context(test.question)
             else:
-                answer, docs = answer_question(test.question)
+                answer, docs = impl().answer_question(test.question)
                 row["answer"] = answer
                 judged = judge_answer(test, answer)
                 row.update(judged.model_dump(include={"accuracy", "completeness", "relevance", "feedback"}))
@@ -283,11 +296,12 @@ def run_batch(limit: int | None, retrieval_only: bool, label: str) -> Path:
         by_category[row["category"]].append(row)
     summary = {
         "label": label,
+        "impl": _impl_name,
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "tests": len(rows),
         "planned_tests": len(tests),
         "error": error,
-        "answer_model": None if retrieval_only else ANSWER_MODEL,
+        "answer_model": None if retrieval_only else impl().MODEL,
         "judge_model": None if retrieval_only else JUDGE_MODEL,
         "seconds": round(time.time() - start, 1),
         "overall": {m: _mean([r[m] for r in rows]) for m in metrics},
@@ -310,8 +324,10 @@ def main():
     parser.add_argument("target", help="a test row number, or 'all' for a batch run")
     parser.add_argument("--limit", type=int, help="batch: evenly spaced subset of N tests")
     parser.add_argument("--retrieval-only", action="store_true", help="batch: skip LLM answer + judge (free, fast)")
+    parser.add_argument("--impl", choices=sorted(IMPLEMENTATIONS), default="basic", help="RAG implementation to evaluate")
     parser.add_argument("--label", default=None, help="batch: results file name (evaluation/results/<label>.json)")
     args = parser.parse_args()
+    use_implementation(args.impl)
 
     if args.target == "all":
         label = args.label or datetime.now().strftime("run_%Y%m%d_%H%M%S")
