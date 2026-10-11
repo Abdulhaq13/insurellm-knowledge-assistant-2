@@ -40,7 +40,7 @@ retriever = vectorstore.as_retriever(search_kwargs={"k": RETRIEVAL_K})
     reraise=True,
 )
 def llm(messages: list[dict], **kwargs):
-    return completion(model=MODEL, messages=messages, **kwargs)
+    return completion(model=MODEL, messages=messages, temperature=0, **kwargs)
 
 
 def fetch_context(question: str) -> list[Document]:
