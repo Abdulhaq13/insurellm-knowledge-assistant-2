@@ -23,7 +23,9 @@ litellm.suppress_debug_info = True
 DECOMPOSE = False  # LLM sub-question step; keep off unless the HELPER_MODEL quota is free
 LIST_EXTRA_K = FINAL_K  # extra chunks, each from a new document, for list-style questions (0 = off)
 HISTORY_TURNS = 1  # prior user turns added to the search query for follow-up questions
-SECOND_PASS_DOCS = 2  # top documents whose titles seed the second search
+# top documents whose titles seed the second search. Speed option for later: 1 matched 2 on all 100 tune
+# questions (+0.75 s instead of +1.71 s per question), but 2 is kept as safer for unseen questions and documents
+SECOND_PASS_DOCS = 2
 SECOND_PASS_EXTRA_K = 3  # extra chunks added by the second search (0 = off)
 
 LIST_QUESTION = re.compile(
