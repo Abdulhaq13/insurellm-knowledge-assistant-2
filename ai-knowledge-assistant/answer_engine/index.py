@@ -21,6 +21,13 @@ COLLECTION = "docs"
 CLIENT_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 # Words, plus numbers with their separators kept together ("10,000", "2.5", "q2")
 TOKEN_PATTERN = re.compile(r"[a-z0-9]+(?:[.,][0-9]+)*")
+# Common English words left out of keyword search. In short, terse documents words like "which" or "their"
+# are rare, so BM25 would treat them as important and rank prose pages above the chunk with the real keyword.
+STOP_WORDS = frozenset(
+    """a an and are as at be been being but by can could did do does for from had has have he her his how i if
+    in into is it its may me might my of on or our she should so such than that the their them then there these
+    they this to was we were what when where which who whom whose why will with would you your""".split()
+)
 
 
 @lru_cache(maxsize=1)
@@ -37,7 +44,9 @@ def embed_query(query: str) -> list[float]:
 
 
 def tokenize(text: str) -> list[str]:
-    return TOKEN_PATTERN.findall(text.lower())
+    """Keyword-search tokens without stop words (all tokens if the text is nothing but stop words)."""
+    tokens = TOKEN_PATTERN.findall(text.lower())
+    return [t for t in tokens if t not in STOP_WORDS] or tokens
 
 
 class BM25(BM25Okapi):
@@ -118,6 +127,14 @@ class ClientIndex:
         scores = bm25.get_scores(tokens)
         top = sorted(range(len(chunks)), key=lambda i: scores[i], reverse=True)[:k]
         return [chunks[i] for i in top if scores[i] > 0]
+
+    def rare_terms(self, query: str, n: int) -> list[str]:
+        """The query's n rarest words that appear in this index (highest IDF first)."""
+        bm25, _ = self._keyword_index()
+        if bm25 is None:
+            return []
+        tokens = {t for t in tokenize(query) if bm25.idf.get(t, 0) > 0}
+        return sorted(tokens, key=lambda t: (-bm25.idf[t], t))[:n]
 
     def _keyword_index(self) -> tuple[BM25 | None, list[Chunk]]:
         # Rebuilt lazily from the stored chunk texts after any change; nothing is re-embedded

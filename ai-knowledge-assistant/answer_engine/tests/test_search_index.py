@@ -3,7 +3,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from answer_engine.index import ClientIndex
+from answer_engine.index import ClientIndex, tokenize
 from answer_engine.schema import LoadedDocument, Section
 
 
@@ -36,6 +36,12 @@ def test_upsert_skip_replace_remove_and_isolation():
         assert other.list_documents() == [] and other.vector_search("penguins", 3) == []
     finally:
         shutil.rmtree(data_dir, ignore_errors=True)
+
+
+def test_tokenize_drops_stop_words_but_keeps_numbers():
+    assert tokenize("Which employees are based in Chicago, and what are their jobs?") == ["employees", "based", "chicago", "jobs"]
+    assert tokenize("It costs $10,000 in Q2") == ["costs", "10,000", "q2"]
+    assert tokenize("What is it?") == ["what", "is", "it"]  # only stop words: keep them rather than search nothing
 
 
 def test_rejects_unsafe_client_id():

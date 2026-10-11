@@ -27,6 +27,7 @@ HISTORY_TURNS = 1  # prior user turns added to the search query for follow-up qu
 # questions (+0.75 s instead of +1.71 s per question), but 2 is kept as safer for unseen questions and documents
 SECOND_PASS_DOCS = 2
 SECOND_PASS_EXTRA_K = 3  # extra chunks added by the second search (0 = off)
+ANCHOR_TERMS = 2  # the question's rarest words; each adds its best-matching document's title to the second search
 
 LIST_QUESTION = re.compile(
     r"\b(how many|which|list|all|every|each|total|average|combined|across|most|least|fewest|compare|both)\b",
@@ -51,10 +52,26 @@ def second_pass(index: ClientIndex, query: str, ranked: list[Chunk], selected: l
     """For two-step questions ("who leads the product that costs X?"): the first search finds the product's
     document; searching again with that document's title + the question finds the fact about it, in the same
     document or any other. Returns up to SECOND_PASS_EXTRA_K chunks not already selected."""
-    queries = [f"{title}\n{query}" for title in top_titles(ranked, SECOND_PASS_DOCS)]
+    titles = top_titles(ranked, SECOND_PASS_DOCS)
+    titles += [t for t in anchor_titles(index, query) if t not in titles]
+    queries = [f"{title}\n{query}" for title in titles]
     candidates = merge(*[r for q in queries for r in (index.vector_search(q, CANDIDATES_K), index.keyword_search(q, CANDIDATES_K))])
     have = {Reranker._key(c) for c in selected}
     return Reranker(queries).rank([c for c in candidates if Reranker._key(c) not in have])[:SECOND_PASS_EXTRA_K]
+
+
+def anchor_titles(index: ClientIndex, query: str) -> list[str]:
+    """Titles of the documents that best match the query's rarest words, one per word. Common words like
+    "salary 2020 2023" can drown out the one specific word ("CTO") that names who or what is meant."""
+    titles = []
+    terms = index.rare_terms(query, ANCHOR_TERMS + 1)
+    # each rare word alone, plus all of them together ("mobile developer" is less ambiguous than "developer")
+    for anchor in terms[:ANCHOR_TERMS] + [" ".join(terms)] * (len(terms) > 1):
+        hits = index.keyword_search(anchor, 1)
+        title = hits[0].metadata.get("title") or hits[0].metadata["doc_id"] if hits else None
+        if title and title not in titles:
+            titles.append(title)
+    return titles
 
 
 def top_titles(ranked: list[Chunk], n: int) -> list[str]:
