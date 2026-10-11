@@ -253,7 +253,21 @@ def run_cli_evaluation(test_number: int):
     print(f"\n{'=' * 80}\n")
 
 
-def sample_tests(tests: list[TestQuestion], limit: int | None) -> list[TestQuestion]:
+SPLITS = ("all", "tune", "holdout")
+
+
+def split_tests(split: str) -> list[tuple[int, TestQuestion]]:
+    """(row index, test) pairs. holdout = every 3rd row (index % 3 == 2, 50 tests), tune = the other 100.
+    Tune on 'tune' and report on 'holdout' so improvements aren't fitted to the reported questions."""
+    indexed = list(enumerate(load_tests()))
+    if split == "holdout":
+        return [(i, t) for i, t in indexed if i % 3 == 2]
+    if split == "tune":
+        return [(i, t) for i, t in indexed if i % 3 != 2]
+    return indexed
+
+
+def sample_tests(tests: list, limit: int | None) -> list:
     """Evenly spaced subset, so every category stays represented."""
     if not limit or limit >= len(tests):
         return tests
@@ -283,9 +297,9 @@ def summarize(rows: list[dict], metrics: list[str], retrieval_only: bool) -> dic
     return stats
 
 
-def run_batch(limit: int | None, retrieval_only: bool, label: str) -> Path:
+def run_batch(limit: int | None, retrieval_only: bool, label: str, split: str = "all") -> Path:
     """Evaluate many tests and save per-test rows plus overall and per-category averages to JSON."""
-    tests = sample_tests(load_tests(), limit)
+    tests = sample_tests(split_tests(split), limit)
     metrics = ["mrr", "ndcg", "keyword_coverage"]
     if not retrieval_only:
         metrics += ["accuracy", "completeness", "relevance"]
@@ -294,8 +308,8 @@ def run_batch(limit: int | None, retrieval_only: bool, label: str) -> Path:
     error = None
     start = time.time()
     try:
-        for index, test in enumerate(tests, start=1):
-            row = {"question": test.question, "category": test.category}
+        for index, (test_index, test) in enumerate(tests, start=1):
+            row = {"index": test_index, "question": test.question, "category": test.category}
             if retrieval_only:
                 docs = impl().fetch_context(test.question)
             else:
@@ -320,6 +334,8 @@ def run_batch(limit: int | None, retrieval_only: bool, label: str) -> Path:
     summary = {
         "label": label,
         "impl": _impl_name,
+        "split": split,
+        "limit": limit,
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "tests": len(rows),
         "planned_tests": len(tests),
@@ -346,6 +362,7 @@ def main():
     parser.add_argument("target", help="a test row number, or 'all' for a batch run")
     parser.add_argument("--limit", type=int, help="batch: evenly spaced subset of N tests")
     parser.add_argument("--retrieval-only", action="store_true", help="batch: skip LLM answer + judge (free, fast)")
+    parser.add_argument("--split", choices=SPLITS, default="all", help="batch: all 150, tune (100) or holdout (50)")
     parser.add_argument("--impl", choices=sorted(IMPLEMENTATIONS), default="basic", help="RAG implementation to evaluate")
     parser.add_argument("--label", default=None, help="batch: results file name (evaluation/results/<label>.json)")
     args = parser.parse_args()
@@ -353,7 +370,7 @@ def main():
 
     if args.target == "all":
         label = args.label or datetime.now().strftime("run_%Y%m%d_%H%M%S")
-        run_batch(args.limit, args.retrieval_only, label)
+        run_batch(args.limit, args.retrieval_only, label, args.split)
         return
 
     try:
