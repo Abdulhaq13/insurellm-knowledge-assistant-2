@@ -57,7 +57,7 @@ python -m evaluation.eval all --limit 30 --label X              # answers + judg
 python -m evaluation.eval all --impl pro --label X              # same, against the pro pipeline
 ```
 
-There is no `requirements.txt` in the main project yet. The venv additionally has `litellm`, `tenacity`, `rank-bm25`, `sentence-transformers`, `tqdm` and `pandas`.
+Dependencies are pinned in `requirements.txt` (exact versions tested in `.venv`); `requirements-dev.txt` adds `pytest` and `fpdf2` for the tests. Add any new package there with its exact version.
 
 ## Environment
 
