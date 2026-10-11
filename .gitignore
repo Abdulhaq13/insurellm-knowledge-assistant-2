@@ -1,0 +1,18 @@
+# secrets
+.env
+**/.env
+
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# regenerable vector stores (rebuild with ingest.py)
+**/vector_db/
+**/preprocessed_db/
+
+# other students' course submissions
+AI knowledge Assisstant/community-contributions/
+
+# deployment copy (has its own git repo on Hugging Face)
+Huggig face space/
