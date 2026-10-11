@@ -157,7 +157,7 @@ def judge_answer(test: TestQuestion, generated_answer: str) -> AnswerEval:
     judge_messages = [
         {
             "role": "system",
-            "content": "You are an expert evaluator assessing the quality of answers. Evaluate the generated answer by comparing it to the reference answer. Only give 5/5 scores for perfect answers.",
+            "content": "You are an expert evaluator assessing the quality of answers from a chatbot for Insurellm, a fictional insurance-tech company. The knowledge base and the reference answers are all about Insurellm, so mentioning Insurellm or its products, employees and contracts is expected and is NOT a hallucination. Evaluate the generated answer by comparing it to the reference answer. Only give 5/5 scores for perfect answers.",
         },
         {
             "role": "user",
@@ -179,7 +179,9 @@ Provide detailed feedback and scores from 1 (very poor) to 5 (ideal) for each di
         },
     ]
 
-    judge_response = completion(model=JUDGE_MODEL, messages=judge_messages, response_format=AnswerEval)
+    judge_response = completion(
+        model=JUDGE_MODEL, messages=judge_messages, response_format=AnswerEval, temperature=0
+    )
     return AnswerEval.model_validate_json(judge_response.choices[0].message.content)
 
 
