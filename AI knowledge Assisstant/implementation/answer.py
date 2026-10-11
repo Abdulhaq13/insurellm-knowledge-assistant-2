@@ -1,21 +1,26 @@
 from pathlib import Path
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from typing import Iterator
+
+import litellm
+from litellm import completion
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_core.messages import SystemMessage, HumanMessage, convert_to_messages
 from langchain_core.documents import Document
 
 from dotenv import load_dotenv
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 
 
 load_dotenv(override=True)
+litellm.suppress_debug_info = True
 
-MODEL = "gpt-4.1-nano"
+MODEL = "groq/openai/gpt-oss-120b"
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 DB_NAME = str(Path(__file__).parent.parent / "vector_db")
 
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-# embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 RETRIEVAL_K = 10
+HISTORY_TURNS_FOR_RETRIEVAL = 2
+MAX_HISTORY_MESSAGES = 6
 
 SYSTEM_PROMPT = """
 You are a knowledgeable, friendly assistant representing the company Insurellm.
@@ -26,36 +31,63 @@ Context:
 {context}
 """
 
+embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
 vectorstore = Chroma(persist_directory=DB_NAME, embedding_function=embeddings)
-retriever = vectorstore.as_retriever()
-llm = ChatOpenAI(temperature=0, model_name=MODEL)
+retriever = vectorstore.as_retriever(search_kwargs={"k": RETRIEVAL_K})
+
+
+@retry(
+    retry=retry_if_exception_type((litellm.RateLimitError, litellm.APIConnectionError, litellm.InternalServerError)),
+    wait=wait_exponential(multiplier=2, min=2, max=60),
+    stop=stop_after_attempt(8),
+    reraise=True,
+)
+def llm(messages: list[dict], **kwargs):
+    return completion(model=MODEL, messages=messages, **kwargs)
 
 
 def fetch_context(question: str) -> list[Document]:
     """
     Retrieve relevant context documents for a question.
     """
-    return retriever.invoke(question, k=RETRIEVAL_K)
+    return retriever.invoke(question)
 
 
 def combined_question(question: str, history: list[dict] = []) -> str:
     """
-    Combine all the user's messages into a single string.
+    Build the retrieval query: the current question first (so embedding truncation
+    can only cut older turns), followed by the most recent prior user messages.
     """
-    prior = "\n".join(m["content"] for m in history if m["role"] == "user")
-    return prior + "\n" + question
+    prior = [m["content"] for m in history if m["role"] == "user"][-HISTORY_TURNS_FOR_RETRIEVAL:]
+    return "\n".join([question, *reversed(prior)])
+
+
+def make_messages(question: str, history: list[dict], docs: list[Document]) -> list[dict]:
+    context = "\n\n".join(doc.page_content for doc in docs)
+    recent = [{"role": m["role"], "content": m["content"]} for m in history[-MAX_HISTORY_MESSAGES:]]
+    return (
+        [{"role": "system", "content": SYSTEM_PROMPT.format(context=context)}]
+        + recent
+        + [{"role": "user", "content": question}]
+    )
 
 
 def answer_question(question: str, history: list[dict] = []) -> tuple[str, list[Document]]:
     """
     Answer the given question with RAG; return the answer and the context documents.
     """
-    combined = combined_question(question, history)
-    docs = fetch_context(combined)
-    context = "\n\n".join(doc.page_content for doc in docs)
-    system_prompt = SYSTEM_PROMPT.format(context=context)
-    messages = [SystemMessage(content=system_prompt)]
-    messages.extend(convert_to_messages(history))
-    messages.append(HumanMessage(content=question))
-    response = llm.invoke(messages)
-    return response.content, docs
+    docs = fetch_context(combined_question(question, history))
+    response = llm(make_messages(question, history, docs))
+    return response.choices[0].message.content, docs
+
+
+def stream_answer(question: str, history: list[dict] = []) -> Iterator[tuple[str, list[Document]]]:
+    """
+    Like answer_question, but yields (answer_so_far, docs) as tokens arrive.
+    """
+    docs = fetch_context(combined_question(question, history))
+    answer = ""
+    yield answer, docs
+    for chunk in llm(make_messages(question, history, docs), stream=True):
+        answer += chunk.choices[0].delta.content or ""
+        yield answer, docs

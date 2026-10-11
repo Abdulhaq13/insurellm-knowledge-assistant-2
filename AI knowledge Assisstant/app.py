@@ -1,7 +1,7 @@
 import gradio as gr
 from dotenv import load_dotenv
 
-from implementation.answer import answer_question
+from implementation.answer import stream_answer
 
 load_dotenv(override=True)
 
@@ -17,9 +17,13 @@ def format_context(context):
 def chat(history):
     last_message = history[-1]["content"]
     prior = history[:-1]
-    answer, context = answer_question(last_message, prior)
-    history.append({"role": "assistant", "content": answer})
-    return history, format_context(context)
+    history = history + [{"role": "assistant", "content": ""}]
+    context_html = None
+    for answer, docs in stream_answer(last_message, prior):
+        if context_html is None:
+            context_html = format_context(docs)
+        history[-1]["content"] = answer
+        yield history, context_html
 
 
 def main():
