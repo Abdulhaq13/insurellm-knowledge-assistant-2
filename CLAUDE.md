@@ -20,7 +20,7 @@ Not deploying for now: the app runs locally (user decision 2026-10-11); the UI m
 
 ## Cost rule
 
-**Answers in `answer_engine` use paid OpenAI `openai/gpt-4.1-mini`** (user decision 2026-10-11; the user has a small credit, about $2). That's roughly $0.001–0.0015 per question, or about $0.20–0.25 for a 150-question eval. Don't switch answers back to Groq without asking. **Everything else stays free:** the query-decomposition helper (`groq/openai/gpt-oss-20b`), the eval judge (`groq/qwen/qwen3.8-27b`), and the local embeddings, reranker and OCR. The legacy `legacy/basic_rag/` and `legacy/pro_rag/` pipelines still answer with Groq `gpt-oss-120b`. Keep every model name in one constant (`answer_engine/config.py`) so model changes are one-line edits. Groq free limits are **per model, shared across the whole account**: about 8,000 tokens/minute and 1,000 requests/day. Two processes calling the same model slow each other down. Gemini's free tier is ~20 requests/day per model, which is unusable for evals.
+**Answers in `answer_engine` use paid OpenAI `openai/gpt-4.1-mini`** (user decision 2026-10-11; the user has a small credit, about $2). That's roughly $0.001–0.0015 per question, or about $0.20–0.25 for a 150-question eval. Don't switch answers back to Groq without asking. Every paid eval run is logged in `evaluation/results/openai_spend.json` and stops once that ledger total reaches `--max-cost` (default $1.50, `evaluation/budget.py`); app and CLI questions are not logged there. **Everything else stays free:** the query-decomposition helper (`groq/openai/gpt-oss-20b`), the eval judge (`groq/qwen/qwen3.8-27b`), and the local embeddings, reranker and OCR. The legacy `legacy/basic_rag/` and `legacy/pro_rag/` pipelines still answer with Groq `gpt-oss-120b`. Keep every model name in one constant (`answer_engine/config.py`) so model changes are one-line edits. Groq free limits are **per model, shared across the whole account**: about 8,000 tokens/minute and 1,000 requests/day. Two processes calling the same model slow each other down. Gemini's free tier is ~20 requests/day per model, which is unusable for evals.
 
 ## Layout (inside `ai-knowledge-assistant/`)
 
@@ -52,7 +52,7 @@ cd "D:\cllg\Project 1\ai-knowledge-assistant"
 
 python -m answer_engine.pipeline ingest data/insurellm   # index the demo documents into engine_data/ (free, ~1 min)
 python app.py                                      # chat UI (answer_engine)
-python -m pytest answer_engine/tests -q            # 112 tests
+python -m pytest answer_engine/tests -q            # 123 tests
 python legacy/basic_rag/ingest.py                  # rebuild legacy/vector_db/ (~20 s, free)
 python legacy/pro_rag/ingest.py                    # build legacy/preprocessed_db/ (~30-40 min on Groq free tier; resumable)
 python -m legacy.basic_app                         # legacy chat UI
