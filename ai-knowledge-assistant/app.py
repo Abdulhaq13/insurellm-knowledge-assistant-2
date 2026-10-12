@@ -30,6 +30,12 @@ NO_ANSWER = re.compile(
     re.IGNORECASE,
 )
 ABOUT_SOURCES = re.compile(r"\b(information|details|documents?|excerpts?|context|sources?|records?)\b", re.IGNORECASE)
+# Images in Markdown/HTML make the browser fetch their URL, which tells that server who looked (and an answer
+# could carry document text in the URL). Answers never need images, so they are removed before display.
+IMAGES = re.compile(
+    r"!\[[^\]]*\]\([^)]*\)|!\[[^\]]*\]\[[^\]]*\]|<(img|video|audio|source|iframe|embed|object|picture)\b[^>]*>",
+    re.IGNORECASE,
+)
 
 
 # ---------- chat ----------
@@ -40,14 +46,25 @@ def is_no_answer(answer: str) -> bool:
     return bool(NO_ANSWER.search(first_sentence) and ABOUT_SOURCES.search(first_sentence))
 
 
+def remove_images(text: str) -> str:
+    return IMAGES.sub("", text)
+
+
+def plain_text(text: str) -> str:
+    """Show uploaded text as-is in a code block, so nothing in it (images, links, HTML) is rendered."""
+    fence = "`" * max(3, max((len(run) for run in re.findall(r"`+", text)), default=0) + 1)
+    return f"{fence}text\n{text}\n{fence}"
+
+
 def format_sources(chunks, used: bool = True) -> str:
     if not chunks:
         return "*No matching documents were found.*"
     parts = []
     for i, chunk in enumerate(chunks, start=1):
         meta = chunk.metadata
-        section = (meta.get("section") or meta.get("title") or "").replace(" > ", " › ")
-        parts.append(f"### {i}. {section}\n`{meta.get('source', '')}`\n\n{chunk.page_content}")
+        section = remove_images(meta.get("section") or meta.get("title") or "").replace(" > ", " › ")
+        source = remove_images(meta.get("source", "")).replace("`", "'")
+        parts.append(f"### {i}. {section}\n`{source}`\n\n{plain_text(chunk.page_content)}")
     heading = "## Sources used" if used else "## Closest matches (not used in the answer)"
     return f"{heading}\n\n" + "\n\n---\n\n".join(parts)
 
@@ -62,7 +79,7 @@ def chat(history):
         for answer, chunks in pipeline.stream_answer(question, prior, client_id=CLIENT_ID):
             if sources is None:
                 sources = format_sources(chunks)
-            history[-1]["content"] = answer
+            history[-1]["content"] = remove_images(answer)
             yield history, sources
         if chunks and is_no_answer(answer):
             yield history, format_sources(chunks, used=False)
