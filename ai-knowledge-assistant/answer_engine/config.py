@@ -9,6 +9,9 @@ CLIENT_NAMES = {"insurellm": "Insurellm"}
 # Answers use OpenAI (needs OPENAI_API_KEY in .env); the helper stays on the Groq free tier
 ANSWER_MODEL = "openai/gpt-4.1-mini"
 HELPER_MODEL = "groq/openai/gpt-oss-20b"  # query rewriting / decomposition
+# Evaluation only (free Groq). The judge is a different model family from the answerer
+JUDGE_MODEL = "groq/qwen/qwen3.8-27b"
+TEST_GENERATOR_MODEL = "groq/openai/gpt-oss-20b"  # evaluation/generate_tests.py
 
 EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"  # changing it requires re-ingesting every client
 EMBEDDING_QUERY_PROMPT = "Represent this sentence for searching relevant passages: "

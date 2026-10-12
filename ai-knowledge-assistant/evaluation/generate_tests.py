@@ -20,12 +20,13 @@ from litellm.exceptions import RateLimitError
 from pydantic import BaseModel, Field
 from tenacity import retry, retry_if_not_exception_type, stop_after_attempt, wait_exponential
 
+from answer_engine.config import TEST_GENERATOR_MODEL
 from evaluation.question_set import TEST_FILE
 
 load_dotenv(override=True)
 litellm.suppress_debug_info = True
 
-MODEL = "groq/openai/gpt-oss-20b"
+MODEL = TEST_GENERATOR_MODEL
 MAX_PART_CHARS = 6000  # keeps each request under Groq's free ~8K tokens/minute
 FALLBACK_EXTENSIONS = {".md", ".txt"}
 SINGLE_DOC_CATEGORIES = ["direct_fact", "numerical", "temporal", "relationship"]

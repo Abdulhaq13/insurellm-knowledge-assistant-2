@@ -13,6 +13,9 @@ import litellm
 
 LEDGER = Path(__file__).parent / "results" / "openai_spend.json"
 PAID_PROVIDERS = {"openai"}
+# Default cap on the ledger total (all eval runs together), below the ~$2 OpenAI credit.
+# The ledger doesn't see app/CLI questions, so real spend is a little higher than it shows.
+DEFAULT_CAP_USD = 1.50
 _lock = threading.Lock()
 
 

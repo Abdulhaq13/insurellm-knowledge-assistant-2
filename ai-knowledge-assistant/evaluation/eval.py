@@ -14,14 +14,21 @@ from litellm import completion
 from dotenv import load_dotenv
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from evaluation.budget import Budget, BudgetExceeded
+from answer_engine.config import CLIENT_NAMES, DEFAULT_CLIENT_ID, JUDGE_MODEL
+from evaluation.budget import DEFAULT_CAP_USD, Budget, BudgetExceeded
 from evaluation.question_set import TestQuestion, load_tests
 
 
 load_dotenv(override=True)
 litellm.suppress_debug_info = True
 
-JUDGE_MODEL = "groq/qwen/qwen3.8-27b"
+ORGANIZATION = CLIENT_NAMES.get(DEFAULT_CLIENT_ID, DEFAULT_CLIENT_ID)  # whose documents the test questions are about
+JUDGE_SYSTEM_PROMPT = (
+    "You are an expert evaluator assessing the quality of answers from a chatbot for {organization}. The knowledge "
+    "base and the reference answers are all about {organization}, so mentioning {organization} or its products, "
+    "people and documents is expected and is NOT a hallucination. Evaluate the generated answer by comparing it to "
+    "the reference answer. Only give 5/5 scores for perfect answers."
+)
 RESULTS_DIR = Path(__file__).parent / "results"
 IMPLEMENTATIONS = {
     "basic": "legacy.basic_rag.answer",
@@ -185,13 +192,10 @@ def evaluate_answer(test: TestQuestion) -> tuple[AnswerEval, str, list]:
 
 
 @retry(wait=wait_exponential(multiplier=2, min=5, max=60), stop=stop_after_attempt(6), reraise=True)
-def judge_answer(test: TestQuestion, generated_answer: str) -> AnswerEval:
+def judge_answer(test: TestQuestion, generated_answer: str, organization: str = ORGANIZATION) -> AnswerEval:
     # LLM judge prompt
     judge_messages = [
-        {
-            "role": "system",
-            "content": "You are an expert evaluator assessing the quality of answers from a chatbot for Insurellm, a fictional insurance-tech company. The knowledge base and the reference answers are all about Insurellm, so mentioning Insurellm or its products, employees and contracts is expected and is NOT a hallucination. Evaluate the generated answer by comparing it to the reference answer. Only give 5/5 scores for perfect answers.",
-        },
+        {"role": "system", "content": JUDGE_SYSTEM_PROMPT.format(organization=organization)},
         {
             "role": "user",
             "content": f"""Question:
@@ -429,7 +433,8 @@ def main():
     parser.add_argument("--impl", choices=sorted(IMPLEMENTATIONS), default="engine", help="RAG implementation to evaluate")
     parser.add_argument("--resume", action="store_true", help="batch: continue an interrupted run with the same --label")
     parser.add_argument("--answer-model", help="override the pipeline's answer model, e.g. openai/gpt-4.1-mini")
-    parser.add_argument("--max-cost", type=float, help="batch: stop once total OpenAI spend (ledger) reaches this many USD")
+    parser.add_argument("--max-cost", type=float, default=DEFAULT_CAP_USD,
+                        help="stop once total OpenAI spend of all eval runs (ledger) reaches this many USD")
     parser.add_argument("--label", default=None, help="batch: results file name (evaluation/results/<label>.json)")
     args = parser.parse_args()
     sys.stdout.reconfigure(encoding="utf-8")  # answers can hold characters the Windows console code page lacks
@@ -439,7 +444,8 @@ def main():
 
     if args.target == "all":
         label = args.label or datetime.now().strftime("run_%Y%m%d_%H%M%S")
-        budget = install_budget(args.max_cost, label) if args.max_cost is not None else None
+        # every paid call is recorded in the ledger and capped, even when --max-cost isn't given
+        budget = None if args.retrieval_only else install_budget(args.max_cost, label)
         run_batch(args.limit, args.retrieval_only, label, args.split, args.resume, budget)
         return
 
@@ -447,6 +453,8 @@ def main():
         test_number = int(args.target)
     except ValueError:
         parser.error("target must be an integer or 'all'")
+    if not args.retrieval_only:
+        install_budget(args.max_cost, args.label or f"row_{test_number}").check()
     run_cli_evaluation(test_number, args.retrieval_only)
 
 
