@@ -238,7 +238,7 @@ def evaluate_all_answers():
         yield test, result, progress
 
 
-def run_cli_evaluation(test_number: int):
+def run_cli_evaluation(test_number: int, retrieval_only: bool = False):
     """Run evaluation for a specific test (async helper for CLI)."""
     tests = load_tests()
 
@@ -269,6 +269,8 @@ def run_cli_evaluation(test_number: int):
     print(f"nDCG: {retrieval_result.ndcg:.4f}")
     print(f"Keywords Found: {retrieval_result.keywords_found}/{retrieval_result.total_keywords}")
     print(f"Keyword Coverage: {retrieval_result.keyword_coverage:.1f}%")
+    if retrieval_only:
+        return
 
     # Answer Evaluation
     print(f"\n{'=' * 80}")
@@ -422,14 +424,15 @@ def main():
     parser = argparse.ArgumentParser(description="Evaluate the RAG system.")
     parser.add_argument("target", help="a test row number, or 'all' for a batch run")
     parser.add_argument("--limit", type=int, help="batch: evenly spaced subset of N tests")
-    parser.add_argument("--retrieval-only", action="store_true", help="batch: skip LLM answer + judge (free, fast)")
+    parser.add_argument("--retrieval-only", action="store_true", help="skip LLM answer + judge (free, fast)")
     parser.add_argument("--split", choices=SPLITS, default="all", help="batch: all 150, tune (100) or holdout (50)")
-    parser.add_argument("--impl", choices=sorted(IMPLEMENTATIONS), default="basic", help="RAG implementation to evaluate")
+    parser.add_argument("--impl", choices=sorted(IMPLEMENTATIONS), default="engine", help="RAG implementation to evaluate")
     parser.add_argument("--resume", action="store_true", help="batch: continue an interrupted run with the same --label")
     parser.add_argument("--answer-model", help="override the pipeline's answer model, e.g. openai/gpt-4.1-mini")
     parser.add_argument("--max-cost", type=float, help="batch: stop once total OpenAI spend (ledger) reaches this many USD")
     parser.add_argument("--label", default=None, help="batch: results file name (evaluation/results/<label>.json)")
     args = parser.parse_args()
+    sys.stdout.reconfigure(encoding="utf-8")  # answers can hold characters the Windows console code page lacks
     use_implementation(args.impl)
     if args.answer_model:
         set_answer_model(args.answer_model)
@@ -444,7 +447,7 @@ def main():
         test_number = int(args.target)
     except ValueError:
         parser.error("target must be an integer or 'all'")
-    run_cli_evaluation(test_number)
+    run_cli_evaluation(test_number, args.retrieval_only)
 
 
 if __name__ == "__main__":
