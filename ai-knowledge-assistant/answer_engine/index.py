@@ -75,12 +75,14 @@ class ClientIndex:
         if existing["metadatas"] and existing["metadatas"][0].get("content_hash") == doc.content_hash:
             return 0
         chunks = chunk_document(doc, self.client_id)
+        # embed before deleting, so a failure here (e.g. out of memory) keeps the old version searchable
+        embeddings = embed_documents([c.page_content for c in chunks]) if chunks else []
         self.remove_document(doc.doc_id)
         if chunks:
             self.collection.add(
                 ids=[f"{doc.doc_id}::{c.metadata['chunk_index']}" for c in chunks],
                 documents=[c.page_content for c in chunks],
-                embeddings=embed_documents([c.page_content for c in chunks]),
+                embeddings=embeddings,
                 metadatas=[c.metadata for c in chunks],
             )
         self._bm25 = None
