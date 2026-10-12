@@ -35,8 +35,8 @@ LIST_QUESTION = re.compile(
 )
 
 
-def retrieve(index: ClientIndex, question: str, history: list[dict] = []) -> list[Chunk]:
-    query = search_query(question, history)
+def retrieve(index: ClientIndex, question: str, history: list[dict] | None = None) -> list[Chunk]:
+    query = search_query(question, history or [])
     queries = [query] + (decompose_question(query) if DECOMPOSE else [])
     candidates = merge(*[r for q in queries for r in (index.vector_search(q, CANDIDATES_K), index.keyword_search(q, CANDIDATES_K))])
     ranked = Reranker(queries).rank(candidates)

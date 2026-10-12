@@ -81,19 +81,21 @@ def list_documents(client_id: str = DEFAULT_CLIENT_ID) -> list[dict]:
     return _index(client_id).list_documents()
 
 
-def fetch_context(question: str, history: list[dict] = [], client_id: str = DEFAULT_CLIENT_ID) -> list[Chunk]:
+def fetch_context(question: str, history: list[dict] | None = None, client_id: str = DEFAULT_CLIENT_ID) -> list[Chunk]:
     from answer_engine.retrieval import retrieve
 
     return retrieve(_index(client_id), question, history)
 
 
-def answer_question(question: str, history: list[dict] = [], client_id: str = DEFAULT_CLIENT_ID) -> tuple[str, list[Chunk]]:
+def answer_question(question: str, history: list[dict] | None = None, client_id: str = DEFAULT_CLIENT_ID) -> tuple[str, list[Chunk]]:
+    history = history or []
     chunks = fetch_context(question, history, client_id)
     messages = generation.make_messages(question, history, chunks, organization_name(client_id))
     return generation.generate(messages), chunks
 
 
-def stream_answer(question: str, history: list[dict] = [], client_id: str = DEFAULT_CLIENT_ID) -> Iterator[tuple[str, list[Chunk]]]:
+def stream_answer(question: str, history: list[dict] | None = None, client_id: str = DEFAULT_CLIENT_ID) -> Iterator[tuple[str, list[Chunk]]]:
+    history = history or []
     chunks = fetch_context(question, history, client_id)
     yield "", chunks
     messages = generation.make_messages(question, history, chunks, organization_name(client_id))
