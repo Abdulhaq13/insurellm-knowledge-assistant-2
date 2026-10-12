@@ -30,6 +30,7 @@ NO_ANSWER = re.compile(
     re.IGNORECASE,
 )
 ABOUT_SOURCES = re.compile(r"\b(information|details|documents?|excerpts?|context|sources?|records?)\b", re.IGNORECASE)
+CITATION = re.compile(r"\[\d+\]")
 # Images in Markdown/HTML make the browser fetch their URL, which tells that server who looked (and an answer
 # could carry document text in the URL). Answers never need images, so they are removed before display.
 IMAGES = re.compile(
@@ -42,6 +43,9 @@ IMAGES = re.compile(
 
 
 def is_no_answer(answer: str) -> bool:
+    # citations mean the excerpts were used, e.g. correcting a false premise: "no mention of closing it; it is open [1]"
+    if CITATION.search(answer):
+        return False
     first_sentence = re.split(r"(?<=[.!?])\s", answer.strip(), maxsplit=1)[0]
     return bool(NO_ANSWER.search(first_sentence) and ABOUT_SOURCES.search(first_sentence))
 

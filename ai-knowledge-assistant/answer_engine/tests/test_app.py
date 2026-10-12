@@ -8,6 +8,9 @@ def test_no_answer_detection():
     assert is_no_answer("The documents do not mention a Paris office. They list Chicago only.")
     assert not is_no_answer("Carllm is not available in Europe [1].")
     assert not is_no_answer("Maxine Thompson won the IIOTY award in 2023 [1].")
+    # a corrected false premise cites what the documents do say, so its sources were used
+    assert not is_no_answer("The excerpts do not contain any information about closing the Denver office. "
+                            "Insurellm still has a Denver office [1][2].")
 
 
 def test_images_are_removed_from_answers():
