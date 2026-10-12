@@ -36,7 +36,7 @@ Not deploying for now: the app runs locally (user decision 2026-10-11); the UI m
 | `legacy/pro_rag/ingest.py` | Pro ingestion. `groq/openai/gpt-oss-20b` splits each document into chunks (headline + summary + original text); long documents are sent in parts. The script is resumable through a cache in `legacy/preprocessed_db/chunk_cache/`. Writes Chroma `legacy/preprocessed_db/` (collection `docs`). |
 | `legacy/pro_rag/answer.py` | Pro RAG: a history-aware query rewrite (gpt-oss-20b), then vector search on the original and the rewritten query plus BM25 keyword search, merged and reranked by a local cross-encoder (`ms-marco-MiniLM-L-6-v2`), keeping the top 10. Answers with gpt-oss-120b. Same interface as basic, including `stream_answer`; its docs are pydantic `Result` objects with `.page_content` and `.metadata`. |
 | `evaluation/tests.jsonl` | 150 test questions with keywords, a reference answer and a category (direct_fact, temporal, comparative, numerical, relationship, spanning, holistic). |
-| `evaluation/eval.py` | Retrieval metrics (MRR, nDCG, keyword coverage) and an LLM-as-judge answer score (accuracy, completeness, relevance, 1–5). The judge is `groq/qwen/qwen3.8-27b` at temperature 0, a different model family from the answerer. `--impl engine|basic|pro` picks the pipeline. Questions are loaded by `evaluation/question_set.py`. Batch runs save JSON to `evaluation/results/<label>.json`. |
+| `evaluation/eval.py` | Retrieval metrics (MRR, nDCG, keyword coverage) and an LLM-as-judge answer score (accuracy, completeness, relevance, 1–5). The judge is `groq/qwen/qwen3.8-27b` at temperature 0, a different model family from the answerer. `--impl engine|basic|pro` picks the pipeline (default `engine`). Questions are loaded by `evaluation/question_set.py`. Batch runs save JSON to `evaluation/results/<label>.json`. |
 | `evaluation/results/` | Saved eval runs: current ones at the top level (`engine_*_gpt41mini`, `engine_tune_*`, `openai_spend.json`); early runs (`baseline_*`, `after_bge_*`, `new_*`, `engine_v1_*`) in `results/archive/`. |
 | `legacy/evaluator_dashboard.py` | Old Gradio dashboard for running the evals (`python -m legacy.evaluator_dashboard`). |
 | `data/insurellm/{company,contracts,employees,products}/*.md` | Source documents (76 files, about 310K characters). The folder name becomes the `doc_type` metadata. |
@@ -52,15 +52,15 @@ cd "D:\cllg\Project 1\ai-knowledge-assistant"
 
 python -m answer_engine.pipeline ingest data/insurellm   # index the demo documents into engine_data/ (free, ~1 min)
 python app.py                                      # chat UI (answer_engine)
-python -m pytest answer_engine/tests -q            # 111 tests
+python -m pytest answer_engine/tests -q            # 112 tests
 python legacy/basic_rag/ingest.py                  # rebuild legacy/vector_db/ (~20 s, free)
 python legacy/pro_rag/ingest.py                    # build legacy/preprocessed_db/ (~30-40 min on Groq free tier; resumable)
 python -m legacy.basic_app                         # legacy chat UI
 python -m legacy.evaluator_dashboard               # legacy evaluation dashboard
-python -m evaluation.eval 0                        # evaluate one test row
-python -m evaluation.eval all --retrieval-only --label X        # all 150, retrieval only: local, free, ~2 s
-python -m evaluation.eval all --limit 30 --label X              # answers + judge on an evenly spaced subset (~4 min)
-python -m evaluation.eval all --impl engine --split tune --label X   # engine answers on the tune split (OpenAI cost)
+python -m evaluation.eval 0 --retrieval-only       # check retrieval for one test row (free; without the flag it also answers + judges)
+python -m evaluation.eval all --retrieval-only --label X        # all 150, retrieval only: local, free, ~1-2 min
+python -m evaluation.eval all --limit 30 --label X              # engine answers + judge on an evenly spaced subset (OpenAI cost, ~4 min)
+python -m evaluation.eval all --split tune --label X              # engine answers on the tune split (OpenAI cost)
 python -m evaluation.eval all --impl pro --label X              # same, against the pro pipeline
 ```
 
