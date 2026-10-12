@@ -1,11 +1,12 @@
 {
-  "total_usd": 0.270869,
-  "calls": 350,
+  "total_usd": 0.415976,
+  "calls": 500,
   "by_label": {
     "engine_holdout_gpt41mini": 0.035197,
     "basic_holdout_gpt41mini": 0.028722,
     "engine_tune_before": 0.067939,
     "engine_tune_after": 0.091932,
-    "engine_holdout_after": 0.047079
+    "engine_holdout_after": 0.047079,
+    "engine_final_150": 0.145107
   }
 }
